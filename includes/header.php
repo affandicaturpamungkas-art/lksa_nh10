@@ -63,10 +63,12 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
                 <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i>
                     Logout</a>
 
+                <?php if ($jabatan != 'Pimpinan') { // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
                 <a href="<?php echo $base_url; ?>pages/tambah_laporan.php" class="btn btn-warning"
                     style="margin-top: 20px; background-color: #e67e22; color: white;">
                     <i class="fas fa-bullhorn"></i> Lapor ke Atasan
                 </a>
+                <?php } // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
 
                 <hr>
 
