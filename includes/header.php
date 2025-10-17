@@ -16,6 +16,57 @@ $verifikasi_active = ($current_page == 'verifikasi-donasi.php' || $current_page 
 $kotak_amal_active = ($current_page == 'kotak-amal.php' || $current_page == 'tambah_kotak_amal.php' || $current_page == 'edit_kotak_amal.php') ? 'active' : '';
 $dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : '';
 
+// --- SIDEBAR LOGIC ---
+$show_sidebar = false;
+$sidebar_html = '';
+
+if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
+    
+    // Check if $conn is defined (it is defined in all page/dashboard files before header.php is included)
+    if (isset($conn)) {
+        $id_user = $_SESSION['id_user'];
+        $user_info_sql = "SELECT Nama_User, Foto, Jabatan FROM User WHERE Id_user = '$id_user'";
+        $user_info = $conn->query($user_info_sql)->fetch_assoc();
+        $nama_user = $user_info['Nama_User'] ?? 'Pengguna';
+        $foto_user = $user_info['Foto'] ?? '';
+        $jabatan = $user_info['Jabatan'] ?? '';
+        $foto_path = $foto_user ? $base_url . 'assets/img/' . $foto_user : $base_url . 'assets/img/yayasan.png';
+        
+        // $sidebar_stats is a variable passed by the calling page (dashboards/pages)
+        $sidebar_stats = $sidebar_stats ?? ''; 
+
+        // Tampilkan sidebar di semua halaman utama (dashboard dan menu manajemen)
+        if ($current_dir == 'dashboards' || in_array($current_page, ['lksa.php', 'users.php', 'donatur.php', 'sumbangan.php', 'kotak-amal.php', 'verifikasi-donasi.php', 'dana-kotak-amal.php'])) {
+            $show_sidebar = true;
+        }
+
+        if ($show_sidebar) {
+            // Use output buffering to capture the sidebar HTML
+            ob_start();
+            ?>
+            <div class="sidebar-wrapper">
+                <img src="<?php echo htmlspecialchars($foto_path); ?>" alt="Foto Profil" class="profile-img">
+                
+                <p class="welcome-text-sidebar">Selamat Datang,<br>
+                <strong><?php echo htmlspecialchars($nama_user); ?> (<?php echo htmlspecialchars($jabatan); ?>)</strong></p>
+
+                <a href="<?php echo $base_url; ?>pages/edit_pengguna.php?id=<?php echo htmlspecialchars($id_user); ?>" class="btn btn-primary"><i class="fas fa-edit"></i> Edit Profil</a>
+                <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                
+                <hr>
+
+                <?php if (!empty($sidebar_stats)) { ?>
+                    <h2>Ringkasan <?php echo htmlspecialchars($jabatan); ?></h2>
+                    <?php echo $sidebar_stats; ?>
+                <?php } ?>
+                
+            </div>
+            <?php
+            $sidebar_html = ob_get_clean();
+        }
+    }
+}
+// --- END SIDEBAR LOGIC ---
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -76,6 +127,11 @@ $dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : 
             background-color: var(--form-bg);
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            /* NEW: Re-enable original style and add flex for sidebar */
+            margin-top: 20px;
+            display: flex; 
+            gap: 40px; 
+            align-items: flex-start;
         }
         .btn {
             padding: 12px 25px;
@@ -223,12 +279,6 @@ $dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : 
         .form-group {
             margin-bottom: 20px;
         }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 14px;
@@ -303,6 +353,68 @@ $dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : 
         .card-kotak-amal { border-color: #e67e22; }
         .card-kotak-amal .value { color: #e67e22; }
         .card-kotak-amal i { color: #e67e22; }
+
+        /* === NEW SIDEBAR STYLES (Disesuaikan untuk Layout 1 Kolom Utama) === */
+        .sidebar-wrapper {
+            width: 280px; /* Lebar Sidebar */
+            flex-shrink: 0;
+            padding: 20px 0; /* padding vertikal */
+            text-align: center;
+            border-right: 1px solid var(--border-color); /* Garis pemisah */
+            padding-right: 40px;
+        }
+        .main-content-area {
+            flex-grow: 1;
+            /* Konten utama dashboard */
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid var(--secondary-color);
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .welcome-text-sidebar {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 10px 0 20px 0;
+            color: var(--primary-color);
+        }
+        .sidebar-stats-card {
+            background-color: var(--bg-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: left;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .sidebar-stats-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .sidebar-stats-card p {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .sidebar-wrapper .btn {
+            width: 100%;
+            margin-top: 10px;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .sidebar-wrapper hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid var(--border-color);
+        }
+        /* END NEW SIDEBAR STYLES */
     </style>
 </head>
 <body>
@@ -337,3 +449,11 @@ $dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : 
                 <a href="<?php echo $base_url; ?>pages/dana-kotak-amal.php" class="nav-item <?php echo $dana_kotak_amal_active; ?>">Pengambilan Kotak Amal</a>
             <?php } ?>
         </div>
+        
+        <?php if ($show_sidebar) { ?>
+        <div class="content">
+            <?php echo $sidebar_html; ?>
+            <div class="main-content-area">
+        <?php } else { ?>
+        <div class="content">
+        <?php } ?>
