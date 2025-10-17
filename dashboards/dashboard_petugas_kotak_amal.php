@@ -1,5 +1,4 @@
 <?php
-include 'includes/header.php';
 include 'config/database.php';
 
 $id_user = $_SESSION['id_user'];
@@ -54,88 +53,76 @@ $user_info_sql = "SELECT Nama_User, Foto FROM User WHERE Id_user = '$id_user'";
 $user_info = $conn->query($user_info_sql)->fetch_assoc();
 $nama_user = $user_info['Nama_User'] ?? 'Pengguna';
 $foto_user = $user_info['Foto'] ?? '';
+$base_url = "http://" . $_SERVER['HTTP_HOST'] . "/lksa_nh/"; // Definisikan $base_url
 $foto_path = $foto_user ? $base_url . 'assets/img/' . $foto_user : $base_url . 'assets/img/yayasan.png'; // Use Yayasan logo as default if none
+
+// Menetapkan variabel $sidebar_stats untuk digunakan di header.php
+$sidebar_stats = '
+<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
+    <h4>Total Kotak Amal LKSA</h4>
+    <p>' . number_format($total_kotak_amal_dikelola) . '</p>
+</div>
+
+<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
+    <h4>Total Dana Diambil Sendiri</h4>
+    <p>Rp ' . number_format($total_uang_diambil) . '</p>
+</div>
+';
+
+include 'includes/header.php'; // <-- LOKASI BARU
 ?>
-<div class="content">
-    <div class="sidebar-wrapper">
-        <img src="<?php echo htmlspecialchars($foto_path); ?>" alt="Foto Profil" class="profile-img">
-        
-        <p class="welcome-text-sidebar">Selamat Datang,<br>
-        <strong><?php echo htmlspecialchars($nama_user); ?> (<?php echo $_SESSION['jabatan']; ?>)</strong></p>
-
-        <a href="<?php echo $base_url; ?>pages/edit_pengguna.php?id=<?php echo htmlspecialchars($id_user); ?>" class="btn btn-primary"><i class="fas fa-edit"></i> Edit Profil</a>
-        <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        
-        <hr>
-
-        <h2>Ringkasan Petugas</h2>
-        <div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
-            <h4>Total Kotak Amal LKSA</h4>
-            <p><?php echo number_format($total_kotak_amal_dikelola); ?></p>
-        </div>
-
-        <div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
-            <h4>Total Dana Diambil Sendiri</h4>
-            <p>Rp <?php echo number_format($total_uang_diambil); ?></p>
-        </div>
-        
+<p>Anda dapat mengelola data kotak amal dan pengambilan dananya.</p>
+<h2>Ringkasan Kotak Amal</h2>
+<div class="stats-grid">
+    <div class="stats-card card-sumbangan">
+        <i class="fas fa-money-bill-wave"></i>
+        <h3>Total Uang Diambil</h3>
+        <span class="value">Rp <?php echo number_format($total_uang_diambil); ?></span>
     </div>
-    <div class="main-content-area">
-        <h1 class="dashboard-title">Sistem Informasi ZIS dan Kotak Amal</h1>
-        <p class="welcome-text">Selamat Datang, Petugas Kotak Amal</p>
-        <p>Anda dapat mengelola data kotak amal dan pengambilan dananya.</p>
-        <h2>Ringkasan Kotak Amal</h2>
-        <div class="stats-grid">
-            <div class="stats-card card-sumbangan">
-                <i class="fas fa-money-bill-wave"></i>
-                <h3>Total Uang Diambil</h3>
-                <span class="value">Rp <?php echo number_format($total_uang_diambil); ?></span>
-            </div>
-            <div class="stats-card card-kotak-amal">
-                <i class="fas fa-box"></i>
-                <h3>Kotak Amal Dikelola</h3>
-                <span class="value"><?php echo $total_kotak_amal_dikelola; ?></span>
-            </div>
-        </div>
-
-        <h2>Jadwal Pengambilan Hari Ini (<?php echo $hari_ini; ?>)</h2>
-        <?php if ($result_jadwal->num_rows > 0) { ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama Toko</th>
-                        <th>Alamat Toko</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while($row = $result_jadwal->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['Nama_Toko']); ?></td>
-                            <td><?php echo htmlspecialchars($row['Alamat_Toko']); ?></td>
-                            <td>
-                                <?php if ($row['is_collected_today']) { ?>
-                                    <span style="color: green; font-weight: bold;">Sudah Diambil</span>
-                                <?php } else { ?>
-                                    <span style="color: orange; font-weight: bold;">Belum Diambil</span>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                <?php if ($row['is_collected_today']) { ?>
-                                <?php } else { ?>
-                                    <a href="pages/dana-kotak-amal.php?id_kotak_amal=<?php echo htmlspecialchars($row['ID_KotakAmal']); ?>" class="btn btn-primary">Ambil</a>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        <?php } else { ?>
-            <p>Tidak ada jadwal pengambilan untuk hari ini.</p>
-        <?php } ?>
+    <div class="stats-card card-kotak-amal">
+        <i class="fas fa-box"></i>
+        <h3>Kotak Amal Dikelola</h3>
+        <span class="value"><?php echo $total_kotak_amal_dikelola; ?></span>
     </div>
-    <?php
+</div>
+
+<h2>Jadwal Pengambilan Hari Ini (<?php echo $hari_ini; ?>)</h2>
+<?php if ($result_jadwal->num_rows > 0) { ?>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Toko</th>
+                <th>Alamat Toko</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($row = $result_jadwal->fetch_assoc()) { ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($row['Nama_Toko']); ?></td>
+                    <td><?php echo htmlspecialchars($row['Alamat_Toko']); ?></td>
+                    <td>
+                        <?php if ($row['is_collected_today']) { ?>
+                            <span style="color: green; font-weight: bold;">Sudah Diambil</span>
+                        <?php } else { ?>
+                            <span style="color: orange; font-weight: bold;">Belum Diambil</span>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <?php if ($row['is_collected_today']) { ?>
+                        <?php } else { ?>
+                            <a href="pages/dana-kotak-amal.php?id_kotak_amal=<?php echo htmlspecialchars($row['ID_KotakAmal']); ?>" class="btn btn-primary">Ambil</a>
+                        <?php } ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+<?php } else { ?>
+    <p>Tidak ada jadwal pengambilan untuk hari ini.</p>
+<?php } ?>
+<?php
 include 'includes/footer.php';
 $conn->close();
 ?>

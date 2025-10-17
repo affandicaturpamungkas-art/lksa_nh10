@@ -66,6 +66,11 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* NEW STYLES FOR DONATUR LAYOUT */
+        /* Warna Aksen Baru: #1abc9c (Turquoise) */
+        :root {
+            --donatur-accent: #1abc9c; 
+        }
+
         body {
             background-image: url('../assets/img/bg.png');
             background-size: cover;
@@ -106,7 +111,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             height: 120px;
             object-fit: cover;
             border-radius: 50%;
-            border: 5px solid #2ecc71; /* Donatur color */
+            border: 5px solid var(--donatur-accent); /* Menggunakan warna baru */
             margin-bottom: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -129,7 +134,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
-            border-left: 5px solid #2ecc71;
+            border-left: 5px solid var(--donatur-accent); /* Menggunakan warna baru */
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .sidebar-stats-card h4 {
@@ -141,7 +146,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             margin: 0;
             font-size: 1.5em;
             font-weight: 700;
-            color: #2ecc71;
+            color: var(--donatur-accent); /* Menggunakan warna baru */
         }
         .sidebar-wrapper hr { 
             margin: 20px 0;
@@ -165,6 +170,11 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-weight: 700;
             color: #2c3e50;
         }
+
+        /* STYLING TAMBAHAN UNTUK DASHBOARD DONATUR */
+        .stats-card i { color: var(--donatur-accent); } 
+        .card-donatur { border-color: var(--donatur-accent); }
+        .card-donatur .value { color: var(--donatur-accent); }
         /* END NEW STYLES */
     </style>
 </head>
@@ -201,42 +211,39 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
                 <div class="stats-grid" style="grid-template-columns: 1fr;">
                     <div class="stats-card card-donatur">
                         <i class="fas fa-hand-holding-usd"></i>
-                        <h3>Total Donasi Anda</h3>
+                        <h3>Total Donasi Uang ZIS Keseluruhan</h3>
                         <span class="value">Rp <?php echo number_format($total_donasi); ?></span>
                     </div>
                 </div>
 
-                <h2>Riwayat Sumbangan</h2>
-                <table>
+                <h2>Riwayat Sumbangan ZIS Anda</h2>
+                <table style="font-size: 0.95em;">
                     <thead>
                         <tr>
-                            <th>No. Kwitansi</th>
-                            <th>Tanggal</th>
-                            <th>Zakat Profesi</th>
-                            <th>Zakat Maal</th>
-                            <th>Infaq</th>
-                            <th>Sedekah</th>
-                            <th>Fidyah</th>
-                            <th>Dibuat Oleh</th>
+                            <th><i class="fas fa-receipt"></i> No. Kwitansi</th>
+                            <th><i class="fas fa-calendar"></i> Tanggal</th>
+                            <th>Total Donasi Uang</th>
+                            <th>Natura (Barang)</th>
+                            <th><i class="fas fa-user-tag"></i> Dibuat Oleh</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ($result_history && $result_history->num_rows > 0) { ?>
-                            <?php while ($row = $result_history->fetch_assoc()) { ?>
+                            <?php while ($row = $result_history->fetch_assoc()) { 
+                                $total_uang_zis = $row['Zakat_Profesi'] + $row['Zakat_Maal'] + $row['Infaq'] + $row['Sedekah'] + $row['Fidyah'];
+                                $natura_display = !empty($row['Natura']) ? htmlspecialchars($row['Natura']) : '-';
+                            ?>
                                 <tr>
                                     <td><?php echo $row['ID_Kwitansi_ZIS']; ?></td>
                                     <td><?php echo $row['Tgl']; ?></td>
-                                    <td>Rp <?php echo number_format($row['Zakat_Profesi']); ?></td>
-                                    <td>Rp <?php echo number_format($row['Zakat_Maal']); ?></td>
-                                    <td>Rp <?php echo number_format($row['Infaq']); ?></td>
-                                    <td>Rp <?php echo number_format($row['Sedekah']); ?></td>
-                                    <td>Rp <?php echo number_format($row['Fidyah']); ?></td>
+                                    <td>**Rp <?php echo number_format($total_uang_zis); ?>**</td>
+                                    <td><?php echo $natura_display; ?></td>
                                     <td><?php echo htmlspecialchars($row['Nama_User'] ?? 'Admin'); ?></td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="8" class="no-data">Belum ada data sumbangan yang tercatat.</td>
+                                <td colspan="5" style="text-align: center; color: #777;">Belum ada data sumbangan yang tercatat.</td>
                             </tr>
                         <?php } ?>
                     </tbody>

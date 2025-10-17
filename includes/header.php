@@ -32,12 +32,16 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         $jabatan = $user_info['Jabatan'] ?? '';
         $foto_path = $foto_user ? $base_url . 'assets/img/' . $foto_user : $base_url . 'assets/img/yayasan.png';
         
-        // $sidebar_stats is a variable passed by the calling page (dashboards/pages)
+        // $sidebar_stats di-set di setiap file dashboard/manajemen
         $sidebar_stats = $sidebar_stats ?? ''; 
 
         // Tampilkan sidebar di semua halaman utama (dashboard dan menu manajemen)
-        if ($current_dir == 'dashboards' || in_array($current_page, ['lksa.php', 'users.php', 'donatur.php', 'sumbangan.php', 'kotak-amal.php', 'verifikasi-donasi.php', 'dana-kotak-amal.php'])) {
-            $show_sidebar = true;
+        // PERBAIKAN: Sertakan 'index.php' secara eksplisit
+        if ($current_page == 'index.php' || $current_dir == 'dashboards' || in_array($current_page, ['lksa.php', 'users.php', 'donatur.php', 'sumbangan.php', 'kotak-amal.php', 'verifikasi-donasi.php', 'dana-kotak-amal.php', 'tambah_pimpinan.php', 'tambah_pengguna.php', 'tambah_donatur.php', 'tambah_kotak_amal.php', 'tambah_sumbangan.php'])) {
+             // Tambahkan pengecualian agar halaman dashboard_donatur.php dll tidak memakai layout ini
+             if ($current_page != 'dashboard_donatur.php' && $current_page != 'dashboard_pemilik_kotak_amal.php') {
+                 $show_sidebar = true;
+             }
         }
 
         if ($show_sidebar) {
@@ -288,6 +292,11 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             font-size: 1em;
             font-family: 'Lato', sans-serif;
         }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
         .form-actions {
             display: flex;
             gap: 15px;
@@ -424,15 +433,11 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
                 <img src="<?php echo $base_url; ?>assets/img/yayasan.png" alt="Logo Yayasan" style="width: 70px; height: auto;">
                 <h1>Sistem Informasi ZIS dan Kotak Amal</h1>
             </div>
-            <div>
-                <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger">Logout</a>
             </div>
-        </div>
         <div class="top-nav">
             <a href="<?php echo $base_url; ?>index.php" class="nav-item <?php echo $dashboard_active; ?>">Dashboard</a>
             <?php if ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] == 'Pimpinan_Pusat') { ?>
                 <a href="<?php echo $base_url; ?>pages/lksa.php" class="nav-item <?php echo $lksa_active; ?>">Manajemen LKSA</a>
-                <a href="<?php echo $base_url; ?>pages/tambah_pimpinan.php" class="nav-item <?php echo ($current_page == 'tambah_pimpinan.php') ? 'active' : ''; ?>">Tambah Pimpinan Baru</a>
             <?php } ?>
             <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
                 <a href="<?php echo $base_url; ?>pages/users.php" class="nav-item <?php echo $users_active; ?>">Manajemen Pengguna</a>

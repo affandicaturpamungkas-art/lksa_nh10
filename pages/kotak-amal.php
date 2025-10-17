@@ -24,39 +24,37 @@ $sql .= " GROUP BY ka.ID_KotakAmal";
 
 $result = $conn->query($sql);
 ?>
-<div class="content">
-    <h1 class="dashboard-title">Manajemen Kotak Amal</h1>
-    <p>Kelola data kotak amal.</p>
-    <a href="tambah_kotak_amal.php" class="btn btn-success">Tambah Kotak Amal</a>
+<h1 class="dashboard-title">Manajemen Kotak Amal</h1>
+<p>Kelola data kotak amal.</p>
+<a href="tambah_kotak_amal.php" class="btn btn-success">Tambah Kotak Amal</a>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>ID Kotak Amal</th>
+            <th>Nama Toko</th>
+            <th>Alamat</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
-                <th>ID Kotak Amal</th>
-                <th>Nama Toko</th>
-                <th>Alamat</th>
-                <th>Aksi</th>
+                <td><?php echo $row['ID_KotakAmal']; ?></td>
+                <td><?php echo $row['Nama_Toko']; ?></td>
+                <td><?php echo $row['Alamat_Toko']; ?></td>
+                <td>
+                    <a href="edit_kotak_amal.php?id=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-primary">Edit</a>
+                    <?php if ($row['is_collected_today']) { ?>
+                        <span style="color: green; font-weight: bold;">Sudah Diambil</span>
+                    <?php } else { ?>
+                        <a href="dana-kotak-amal.php?id_kotak_amal=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-success">Pengambilan</a>
+                    <?php } ?>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()) { ?>
-                <tr>
-                    <td><?php echo $row['ID_KotakAmal']; ?></td>
-                    <td><?php echo $row['Nama_Toko']; ?></td>
-                    <td><?php echo $row['Alamat_Toko']; ?></td>
-                    <td>
-                        <a href="edit_kotak_amal.php?id=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-primary">Edit</a>
-                        <?php if ($row['is_collected_today']) { ?>
-                            <span style="color: green; font-weight: bold;">Sudah Diambil</span>
-                        <?php } else { ?>
-                            <a href="dana-kotak-amal.php?id_kotak_amal=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-success">Pengambilan</a>
-                        <?php } ?>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <?php } ?>
+    </tbody>
+</table>
 
 <?php
 include '../includes/footer.php';

@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../config/database.php';
-include '../includes/header.php';
+// include '../includes/header.php'; // Pindahkan ke bawah
 
 // Authorization check: Hanya Pimpinan, Kepala LKSA, dan Petugas Kotak Amal yang bisa mengakses
 if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA' && $_SESSION['jabatan'] != 'Petugas Kotak Amal') {
@@ -12,67 +12,70 @@ if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA' 
 $id_user = $_SESSION['id_user'];
 $id_lksa = $_SESSION['id_lksa'];
 
+$sidebar_stats = ''; // Pastikan sidebar tampil
+
+include '../includes/header.php'; // LOKASI BARU
 ?>
-<div class="content">
-    <div class="form-container">
-        <h1>Tambah Kotak Amal Baru</h1>
-        <form action="proses_kotak_amal.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_user" value="<?php echo htmlspecialchars($id_user); ?>">
-            <input type="hidden" name="id_lksa" value="<?php echo htmlspecialchars($id_lksa); ?>">
+<div class="form-container">
+    <h1>Tambah Kotak Amal Baru</h1>
+    <form action="proses_kotak_amal.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id_user" value="<?php echo htmlspecialchars($id_user); ?>">
+        <input type="hidden" name="id_lksa" value="<?php echo htmlspecialchars($id_lksa); ?>">
 
-            <div class="form-section">
-                <h2>Informasi Toko</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nama Toko:</label>
-                        <input type="text" name="nama_toko" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat Toko:</label>
-                        <input type="text" name="alamat_toko" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2>Pilih Lokasi di Peta</h2>
+        <div class="form-section">
+            <h2>Informasi Toko</h2>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label>Pilih Lokasi dengan Menandai di Peta:</label>
-                    <div id="map" style="height: 400px; width: 100%;"></div>
-                    <small>Geser marker atau klik peta untuk menempatkan lokasi.</small>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Latitude:</label>
-                        <input type="text" id="latitude" name="latitude" readonly required>
-                    </div>
-                    <div class="form-group">
-                        <label>Longitude:</label>
-                        <input type="text" id="longitude" name="longitude" readonly required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2>Informasi Pemilik</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nama Pemilik:</label>
-                        <input type="text" name="nama_pemilik">
-                    </div>
-                    <div class="form-group">
-                        <label>Nomor WA Pemilik:</label>
-                        <input type="text" name="wa_pemilik">
-                    </div>
+                    <label>Nama Toko:</label>
+                    <input type="text" name="nama_toko" required>
                 </div>
                 <div class="form-group">
-                    <label>Email Pemilik:</label>
-                    <input type="email" name="email_pemilik">
+                    <label>Alamat Toko:</label>
+                    <input type="text" name="alamat_toko" required>
                 </div>
             </div>
-            
-            <div class="form-section">
-                <h2>Informasi Lainnya</h2>
+        </div>
+
+        <div class="form-section">
+            <h2>Pilih Lokasi di Peta</h2>
+            <div class="form-group">
+                <label>Pilih Lokasi dengan Menandai di Peta:</label>
+                <div id="map" style="height: 400px; width: 100%;"></div>
+                <small>Geser marker atau klik peta untuk menempatkan lokasi.</small>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Latitude:</label>
+                    <input type="text" id="latitude" name="latitude" readonly required>
+                </div>
+                <div class="form-group">
+                    <label>Longitude:</label>
+                    <input type="text" id="longitude" name="longitude" readonly required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Informasi Pemilik</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nama Pemilik:</label>
+                    <input type="text" name="nama_pemilik">
+                </div>
+                <div class="form-group">
+                    <label>Nomor WA Pemilik:</label>
+                    <input type="text" name="wa_pemilik">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email Pemilik:</label>
+                <input type="email" name="email_pemilik">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Informasi Lainnya</h2>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="form-group">
                     <label>Jadwal Pengambilan:</label>
                     <select name="jadwal_pengambilan">
@@ -87,21 +90,21 @@ $id_lksa = $_SESSION['id_lksa'];
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Keterangan:</label>
-                    <textarea name="keterangan" rows="4" cols="50"></textarea>
-                </div>
-                <div class="form-group">
                     <label>Unggah Foto:</label>
                     <input type="file" name="foto" accept="image/*">
                 </div>
             </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-success">Simpan Kotak Amal</button>
-                <a href="kotak-amal.php" class="btn btn-cancel">Batal</a>
+            <div class="form-group">
+                <label>Keterangan:</label>
+                <textarea name="keterangan" rows="4" cols="50"></textarea>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Simpan Kotak Amal</button>
+            <a href="kotak-amal.php" class="btn btn-cancel">Batal</a>
+        </div>
+    </form>
 </div>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>

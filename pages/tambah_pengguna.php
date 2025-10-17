@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../config/database.php';
-include '../includes/header.php';
+// include '../includes/header.php'; // Pindahkan ke bawah
 
 if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA') {
     die("Akses ditolak.");
@@ -10,14 +10,17 @@ if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA')
 $sql_lksa = "SELECT Id_lksa FROM LKSA";
 $result_lksa = $conn->query($sql_lksa);
 
+$sidebar_stats = ''; // Pastikan sidebar tampil
+
+include '../includes/header.php'; // LOKASI BARU
 ?>
-<div class="content">
-    <div class="form-container">
-        <h1>Tambah Pengguna Baru</h1>
-        <form action="proses_pengguna.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="tambah">
-            <div class="form-section">
-                <h2>Data Pengguna</h2>
+<div class="form-container">
+    <h1>Tambah Pengguna Baru</h1>
+    <form action="proses_pengguna.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="tambah">
+        <div class="form-section">
+            <h2>Data Pengguna</h2>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="form-group">
                     <label>Nama User:</label>
                     <input type="text" name="nama_user" required>
@@ -26,6 +29,9 @@ $result_lksa = $conn->query($sql_lksa);
                     <label>Password:</label>
                     <input type="password" name="password" required>
                 </div>
+            </div>
+            
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="form-group">
                     <label>Jabatan:</label>
                     <select name="jabatan" required>
@@ -54,18 +60,19 @@ $result_lksa = $conn->query($sql_lksa);
                         </select>
                     <?php } ?>
                 </div>
-                <div class="form-group">
-                    <label>Foto:</label>
-                    <input type="file" name="foto" accept="image/*">
-                </div>
             </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn-success">Simpan</button>
-                <a href="users.php" class="btn btn-cancel">Batal</a>
+
+            <div class="form-group">
+                <label>Foto:</label>
+                <input type="file" name="foto" accept="image/*">
             </div>
-        </form>
-    </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Simpan</button>
+            <a href="users.php" class="btn btn-cancel">Batal</a>
+        </div>
+    </form>
 </div>
 
 <?php

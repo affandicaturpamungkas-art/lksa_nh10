@@ -17,36 +17,34 @@ if ($_SESSION['jabatan'] != 'Pimpinan') {
 }
 $result = $conn->query($sql);
 ?>
-<div class="content">
-    <h1 class="dashboard-title">Manajemen Sumbangan</h1>
-    <p>Lihat dan kelola semua transaksi sumbangan ZIS.</p>
-    <a href="tambah_sumbangan.php" class="btn btn-success">Input Sumbangan Baru</a>
+<h1 class="dashboard-title">Manajemen Sumbangan</h1>
+<p>Lihat dan kelola semua transaksi sumbangan ZIS.</p>
+<a href="tambah_sumbangan.php" class="btn btn-success">Input Sumbangan Baru</a>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>ID Kwitansi</th>
+            <th>Donatur</th>
+            <th>Total ZIS</th>
+            <th>Tanggal</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
-                <th>ID Kwitansi</th>
-                <th>Donatur</th>
-                <th>Total ZIS</th>
-                <th>Tanggal</th>
-                <th>Aksi</th>
+                <td><?php echo $row['ID_Kwitansi_ZIS']; ?></td>
+                <td><?php echo $row['Nama_Donatur']; ?></td>
+                <td>Rp <?php echo number_format($row['Zakat_Profesi'] + $row['Zakat_Maal'] + $row['Infaq'] + $row['Sedekah'] + $row['Fidyah']); ?></td>
+                <td><?php echo $row['Tgl']; ?></td>
+                <td>
+                    <a href="detail_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-primary">Detail</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()) { ?>
-                <tr>
-                    <td><?php echo $row['ID_Kwitansi_ZIS']; ?></td>
-                    <td><?php echo $row['Nama_Donatur']; ?></td>
-                    <td>Rp <?php echo number_format($row['Zakat_Profesi'] + $row['Zakat_Maal'] + $row['Infaq'] + $row['Sedekah'] + $row['Fidyah']); ?></td>
-                    <td><?php echo $row['Tgl']; ?></td>
-                    <td>
-                        <a href="detail_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-primary">Detail</a>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <?php } ?>
+    </tbody>
+</table>
 
 <?php
 include '../includes/footer.php';

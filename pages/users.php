@@ -24,43 +24,41 @@ if ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] == 'Pimpinan_Pusa
 
 $result = $conn->query($sql);
 ?>
-<div class="content">
-    <h1 class="dashboard-title">Manajemen Pengguna</h1>
-    <p>Anda dapat mengelola akun pengguna di sistem.</p>
-    <a href="tambah_pengguna.php" class="btn btn-success">Tambah Pengguna Baru</a>
+<h1 class="dashboard-title">Manajemen Pengguna</h1>
+<p>Anda dapat mengelola akun pengguna di sistem.</p>
+<a href="tambah_pengguna.php" class="btn btn-success">Tambah Pengguna Baru</a>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>ID User</th>
+            <th>Nama User</th>
+            <th>Jabatan</th>
+            <th>Foto</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
-                <th>ID User</th>
-                <th>Nama User</th>
-                <th>Jabatan</th>
-                <th>Foto</th>
-                <th>Aksi</th>
+                <td><?php echo $row['Id_user']; ?></td>
+                <td><?php echo $row['Nama_User']; ?></td>
+                <td><?php echo $row['Jabatan']; ?></td>
+                <td>
+                    <?php if ($row['Foto']) { ?>
+                        <img src="../assets/img/<?php echo htmlspecialchars($row['Foto']); ?>" alt="Foto Profil" style="width: 50px; height: 50px; object-fit: cover;">
+                    <?php } else { ?>
+                        Tidak Ada
+                    <?php } ?>
+                </td>
+                <td>
+                    <a href="edit_pengguna.php?id=<?php echo $row['Id_user']; ?>" class="btn btn-primary">Edit</a>
+                    <a href="hapus_pengguna.php?id=<?php echo $row['Id_user']; ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">Hapus</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()) { ?>
-                <tr>
-                    <td><?php echo $row['Id_user']; ?></td>
-                    <td><?php echo $row['Nama_User']; ?></td>
-                    <td><?php echo $row['Jabatan']; ?></td>
-                    <td>
-                        <?php if ($row['Foto']) { ?>
-                            <img src="../assets/img/<?php echo htmlspecialchars($row['Foto']); ?>" alt="Foto Profil" style="width: 50px; height: 50px; object-fit: cover;">
-                        <?php } else { ?>
-                            Tidak Ada
-                        <?php } ?>
-                    </td>
-                    <td>
-                        <a href="edit_pengguna.php?id=<?php echo $row['Id_user']; ?>" class="btn btn-primary">Edit</a>
-                        <a href="hapus_pengguna.php?id=<?php echo $row['Id_user']; ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">Hapus</a>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <?php } ?>
+    </tbody>
+</table>
 
 <?php
 include '../includes/footer.php';

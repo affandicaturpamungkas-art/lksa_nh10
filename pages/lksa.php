@@ -1,7 +1,6 @@
 <?php
 session_start();
 include '../config/database.php';
-include '../includes/header.php';
 
 // Pastikan hanya Pimpinan yang bisa mengakses halaman ini
 if ($_SESSION['jabatan'] != 'Pimpinan') {
@@ -12,35 +11,40 @@ if ($_SESSION['jabatan'] != 'Pimpinan') {
 $sql = "SELECT * FROM LKSA";
 $result = $conn->query($sql);
 
+// Set sidebar stats ke string kosong agar sidebar tetap tampil
+$sidebar_stats = ''; 
+
+include '../includes/header.php'; // <-- LOKASI BARU
 ?>
-<div class="content">
-    <h1 class="dashboard-title">Manajemen LKSA</h1>
-    <p>Halaman ini memungkinkan Anda untuk mengelola semua data LKSA yang terdaftar.</p>
-    <table>
-        <thead>
+<h1 class="dashboard-title">Manajemen LKSA</h1>
+<p>Halaman ini memungkinkan Anda untuk mengelola semua data LKSA yang terdaftar.</p>
+
+<a href="tambah_pimpinan.php" class="btn btn-success" style="margin-bottom: 20px;">Tambah LKSA</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID LKSA</th>
+            <th>Nama Pimpinan</th>
+            <th>Alamat</th>
+            <th>Tanggal Daftar</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while($row = $result->fetch_assoc()) { ?>
             <tr>
-                <th>ID LKSA</th>
-                <th>Nama Pimpinan</th>
-                <th>Alamat</th>
-                <th>Tanggal Daftar</th>
-                <th>Aksi</th>
+                <td><?php echo $row['Id_lksa']; ?></td>
+                <td><?php echo $row['Nama_Pimpinan']; ?></td>
+                <td><?php echo $row['Alamat']; ?></td>
+                <td><?php echo $row['Tanggal_Daftar']; ?></td>
+                <td>
+                    <a href="edit_lksa.php?id=<?php echo $row['Id_lksa']; ?>" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php while($row = $result->fetch_assoc()) { ?>
-                <tr>
-                    <td><?php echo $row['Id_lksa']; ?></td>
-                    <td><?php echo $row['Nama_Pimpinan']; ?></td>
-                    <td><?php echo $row['Alamat']; ?></td>
-                    <td><?php echo $row['Tanggal_Daftar']; ?></td>
-                    <td>
-                        <a href="edit_lksa.php?id=<?php echo $row['Id_lksa']; ?>" class="btn btn-primary">Edit</a>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <?php } ?>
+    </tbody>
+</table>
 
 <?php
 include '../includes/footer.php';
