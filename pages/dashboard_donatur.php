@@ -62,13 +62,15 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* NEW STYLES FOR DONATUR LAYOUT */
         /* Warna Aksen Baru: #1abc9c (Turquoise) */
         :root {
             --donatur-accent: #1abc9c; 
+            --donatur-secondary-bg: #e8f8f5; /* Light background for stats card */
+            --logout-danger: #dc3545; /* Merah untuk tombol logout */
         }
 
         body {
@@ -76,6 +78,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            font-family: 'Open Sans', sans-serif; /* Menggunakan Open Sans */
         }
         .container {
             max-width: 1400px; /* Increased max-width */
@@ -121,16 +124,53 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             margin: 10px 0 20px 0;
             color: #2c3e50;
         }
-        .sidebar-wrapper .btn { 
+        /* Mengganti btn-primary dan btn-danger dengan gaya kustom */
+        .sidebar-wrapper .btn-custom { 
+            background-color: var(--donatur-accent); /* Use Turquoise accent color */
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
             width: 100%;
             margin-top: 10px;
-            display: block;
-            text-align: center;
             box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .sidebar-wrapper .btn-custom:hover {
+            background-color: #16a085; /* Darker turquoise on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        /* Gaya khusus untuk tombol Logout */
+        .sidebar-wrapper .btn-logout { 
+            background-color: var(--logout-danger); /* Merah */
+            color: #fff;
+        }
+        .sidebar-wrapper .btn-logout:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+        .sidebar-wrapper .btn-report { /* Gaya untuk tombol Lapor Masalah */
+            background-color: #e67e22; /* Oranye */
+            color: white;
+            font-weight: 700;
+        }
+        .sidebar-wrapper .btn-report:hover {
+            background-color: #d35400; 
+        }
+
+        .sidebar-wrapper hr { 
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #e0e0e0;
         }
         .sidebar-stats-card {
-            background-color: #f0f2f5;
-            padding: 15px;
+            background-color: var(--donatur-secondary-bg); /* Menggunakan warna latar belakang yang lebih terang */
+            padding: 18px;
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
@@ -148,11 +188,6 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-weight: 700;
             color: var(--donatur-accent); /* Menggunakan warna baru */
         }
-        .sidebar-wrapper hr { 
-            margin: 20px 0;
-            border: 0;
-            border-top: 1px solid #e0e0e0;
-        }
         .header {
             display: flex;
             justify-content: space-between;
@@ -169,22 +204,75 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-size: 1.5em;
             font-weight: 700;
             color: #2c3e50;
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* STYLING TAMBAHAN UNTUK DASHBOARD DONATUR */
+        .stats-card {
+            text-align: left; /* Mengubah alignment kartu statistik */
+            padding: 25px;
+            align-items: flex-start;
+        }
+        
+        .stats-card i {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            align-self: flex-end; /* Pindahkan icon ke kanan atas */
+        }
+        
+        .stats-card h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em; /* Perbesar sedikit judul */
+        }
+        
+        .stats-card .value {
+            font-size: 3.0em; /* Perbesar nominal */
+            font-weight: 800;
+        }
+
         .stats-card i { color: var(--donatur-accent); } 
-        .card-donatur { border-color: var(--donatur-accent); }
+        .card-donatur { 
+            border-color: var(--donatur-accent); 
+            background-color: var(--donatur-secondary-bg); /* Latar belakang untuk menonjolkan */
+        }
         .card-donatur .value { color: var(--donatur-accent); }
+        
+        /* NEW TABLE STYLES FOR READABILITY */
+        .main-content-area h2 {
+            font-size: 1.8em;
+            color: var(--donatur-accent);
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .money-col {
+            text-align: right !important; 
+            font-weight: 700;
+            color: #34495e; /* Warna teks gelap */
+        }
+
+        table thead th {
+            background-color: var(--donatur-accent);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .no-data {
+            font-style: italic;
+            padding: 20px;
+            text-align: center !important;
+        }
         /* END NEW STYLES */
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 style="text-align: left;">Dashboard Donatur</h1>
+            <h1 style="text-align: left;"><i class="fas fa-hand-holding-heart" style="color: var(--donatur-accent);"></i> Portal Donatur ZIS & Kotak Amal</h1>
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-weight: 500; color: #555;">Halo, <?php echo htmlspecialchars($nama_donatur); ?>!</span>
-                <a href="../login/logout.php" class="btn btn-danger">Logout</a>
             </div>
         </div>
 
@@ -195,8 +283,13 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
                 <p class="welcome-text-sidebar">Selamat Datang,<br>
                 <strong><?php echo htmlspecialchars($nama_donatur); ?> (Donatur)</strong></p>
 
-                <a href="#" class="btn btn-primary" disabled><i class="fas fa-edit"></i> Edit Profil</a> 
-                <a href="../login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="<?php echo $base_url; ?>pages/edit_donatur.php?id=<?php echo htmlspecialchars($id_donatur); ?>" class="btn btn-custom"><i class="fas fa-edit"></i> Edit Profil</a> 
+                
+                <a href="tambah_laporan.php" class="btn btn-custom btn-report" style="margin-top: 10px;">
+                    <i class="fas fa-bullhorn"></i> Laporkan Masalah
+                </a>
+
+                <a href="../login/logout.php" class="btn btn-custom btn-logout" style="margin-top: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 
                 <hr>
                 
@@ -206,12 +299,12 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
                 </div>
             </div>
             <div class="main-content-area">
-                <p style="text-align: left;">Selamat datang di dashboard donasi Anda. Di sini Anda dapat melihat riwayat dan total sumbangan yang telah Anda berikan.</p>
+                <p style="text-align: left; font-size: 1.1em; color: #555;">Selamat datang, <strong><?php echo htmlspecialchars($nama_donatur); ?></strong>! Pantau riwayat donasi Anda di sini.</p>
                 
                 <div class="stats-grid" style="grid-template-columns: 1fr;">
                     <div class="stats-card card-donatur">
                         <i class="fas fa-hand-holding-usd"></i>
-                        <h3>Total Donasi Uang ZIS Keseluruhan</h3>
+                        <h3>Total Donasi ZIS Uang Keseluruhan</h3>
                         <span class="value">Rp <?php echo number_format($total_donasi); ?></span>
                     </div>
                 </div>
@@ -236,14 +329,14 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
                                 <tr>
                                     <td><?php echo $row['ID_Kwitansi_ZIS']; ?></td>
                                     <td><?php echo $row['Tgl']; ?></td>
-                                    <td>**Rp <?php echo number_format($total_uang_zis); ?>**</td>
+                                    <td class="money-col">Rp <?php echo number_format($total_uang_zis); ?></td>
                                     <td><?php echo $natura_display; ?></td>
                                     <td><?php echo htmlspecialchars($row['Nama_User'] ?? 'Admin'); ?></td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="5" style="text-align: center; color: #777;">Belum ada data sumbangan yang tercatat.</td>
+                                <td colspan="5" class="no-data">Belum ada data sumbangan yang tercatat.</td>
                             </tr>
                         <?php } ?>
                     </tbody>

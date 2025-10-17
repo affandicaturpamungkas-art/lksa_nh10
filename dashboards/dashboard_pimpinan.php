@@ -47,15 +47,7 @@ $sidebar_stats = '
     <h4>Total Pengguna Sistem</h4>
     <p>' . number_format($sidebar_total_user) . '</p>
 </div>
-<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #9b59b6;">
-    <h4>Total Sumbangan ZIS Global</h4>
-    <p>Rp ' . number_format($total_sumbangan_donatur) . '</p>
-</div>
-<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
-    <h4>Total Dana Kotak Amal Global</h4>
-    <p>Rp ' . number_format($total_dana_kotak_amal) . '</p>
-</div>
-';
+'; // Menghapus Total Sumbangan ZIS Global dan Total Dana Kotak Amal Global
 
 include 'includes/header.php'; // <-- LOKASI BARU
 ?>
@@ -81,16 +73,6 @@ include 'includes/header.php'; // <-- LOKASI BARU
         <i class="fas fa-coins"></i>
         <h3>Total Sumbangan Kotak Amal</h3>
         <span class="value">Rp <?php echo number_format($total_dana_kotak_amal); ?></span>
-    </div>
-    <div class="stats-card card-lksa">
-        <i class="fas fa-building"></i>
-        <h3>Total Lembaga LKSA</h3>
-        <span class="value"><?php echo $sidebar_total_lksa; ?></span>
-    </div>
-    <div class="stats-card card-user">
-        <i class="fas fa-users"></i>
-        <h3>Total Pengguna</h3>
-        <span class="value"><?php echo $sidebar_total_user; ?></span>
     </div>
 </div>
 

@@ -6,7 +6,7 @@ if ($_SESSION['jabatan'] != 'Pimpinan') {
     die("Akses ditolak.");
 }
 
-function handle_upload($file) {
+function handle_upload($file, $jabatan, $nama_user) {
     $target_dir = "C:/xampp/htdocs/lksa_nh/assets/img/";
     $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     $allowed_extensions = array("jpg", "jpeg", "png", "gif");
@@ -19,7 +19,15 @@ function handle_upload($file) {
         return ['error' => "Maaf, ukuran file terlalu besar."];
     }
 
-    $unique_filename = uniqid('pimpinan_') . '.' . $file_extension;
+    // Format nama: jabatan_nama_uniqid.ext
+    // 1. Hapus karakter non-alfanumerik/spasi
+    $safe_name = preg_replace('/[^a-zA-Z0-9\s]/', '', $nama_user); 
+    // 2. Ganti spasi dengan underscore
+    $safe_name = str_replace(' ', '_', trim($safe_name)); 
+    $safe_jabatan = str_replace(' ', '_', trim($jabatan));
+
+    // 3. Gabungkan dan tambahkan uniqid() singkat (5 karakter terakhir)
+    $unique_filename = strtolower($safe_jabatan . '_' . $safe_name . '_' . substr(uniqid(), -5)) . '.' . $file_extension;
     $target_file = $target_dir . $unique_filename;
 
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
@@ -63,9 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $insert_lksa_stmt->close();
     
-    // Proses unggah foto
+    // Proses unggah foto (MENGGUNAKAN FUNGSI BARU)
     if (!empty($_FILES['foto']['name'])) {
-        $upload_result = handle_upload($_FILES['foto']);
+        $upload_result = handle_upload($_FILES['foto'], $jabatan, $nama_user);
         if (isset($upload_result['error'])) {
             die($upload_result['error']);
         }

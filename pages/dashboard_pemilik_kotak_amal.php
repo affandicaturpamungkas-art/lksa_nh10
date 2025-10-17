@@ -9,7 +9,18 @@ if (!isset($_SESSION['is_pemilik_kotak_amal'])) {
 }
 
 $id_kotak_amal = $_SESSION['id_kotak_amal'];
-$nama_pemilik = $_SESSION['nama_pemilik'];
+// Mengambil Nama Pemilik dari DB berdasarkan ID Kotak Amal
+$sql_pemilik = "SELECT Nama_Pemilik FROM KotakAmal WHERE ID_KotakAmal = ?";
+$stmt_pemilik = $conn->prepare($sql_pemilik);
+$stmt_pemilik->bind_param("s", $id_kotak_amal);
+$stmt_pemilik->execute();
+$result_pemilik = $stmt_pemilik->get_result();
+$nama_pemilik = $result_pemilik->fetch_assoc()['Nama_Pemilik'] ?? 'Pemilik Kotak Amal';
+$stmt_pemilik->close();
+
+// Setting session ID Pemilik Kotak Amal untuk laporan (ID Kotak Amal berfungsi sebagai ID Pemilik di konteks ini)
+$_SESSION['id_pemilik'] = $id_kotak_amal; 
+
 
 $total_uang_diambil = 0;
 $result_history = null;
@@ -63,22 +74,28 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* NEW STYLES FOR PEMILIK KOTAK AMAL LAYOUT */
+        :root {
+            --ka-accent: #e67e22; /* Orange */
+            --ka-secondary-bg: #f9e9d9;
+            --ka-danger: #dc3545;
+        }
+
         body {
             background-image: url('../assets/img/bg.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            font-family: 'Open Sans', sans-serif;
         }
         .container {
-            max-width: 1400px; /* Increased max-width */
+            max-width: 1400px;
             padding: 20px;
         }
         
-        /* Implementasi layout sidebar di .content */
         .content { 
             padding: 40px;
             background-color: #fff;
@@ -108,7 +125,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             height: 120px;
             object-fit: cover;
             border-radius: 50%;
-            border: 5px solid #e67e22; /* Kotak Amal color */
+            border: 5px solid var(--ka-accent);
             margin-bottom: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -118,20 +135,47 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             margin: 10px 0 20px 0;
             color: #2c3e50;
         }
+        
         .sidebar-wrapper .btn { 
             width: 100%;
             margin-top: 10px;
             display: block;
             text-align: center;
             box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 600;
         }
+        
+        /* Gaya Tombol Edit dan Logout */
+        .sidebar-wrapper .btn-edit-ka {
+            background-color: var(--ka-accent);
+            color: white;
+        }
+        .sidebar-wrapper .btn-edit-ka:hover {
+            background-color: #cf6717;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.4);
+        }
+        .sidebar-wrapper .btn-report { 
+            background-color: #2ecc71; /* Hijau untuk Lapor */
+            color: white;
+            font-weight: 700;
+        }
+        .sidebar-wrapper .btn-report:hover {
+            background-color: #27ae60; 
+        }
+        .sidebar-wrapper .btn-danger {
+            background-color: var(--ka-danger);
+            color: white;
+        }
+
         .sidebar-stats-card {
-            background-color: #f0f2f5;
+            background-color: var(--ka-secondary-bg);
             padding: 15px;
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
-            border-left: 5px solid #e67e22;
+            border-left: 5px solid var(--ka-accent);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .sidebar-stats-card h4 {
@@ -143,7 +187,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             margin: 0;
             font-size: 1.5em;
             font-weight: 700;
-            color: #e67e22;
+            color: var(--ka-accent);
         }
         .sidebar-wrapper hr { 
             margin: 20px 0;
@@ -166,6 +210,31 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             font-size: 1.5em;
             font-weight: 700;
             color: #2c3e50;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .main-content-area h2 {
+            font-size: 1.8em;
+            color: var(--ka-accent);
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .stats-card {
+            border-left: 5px solid var(--ka-accent);
+            background-color: var(--ka-secondary-bg);
+            text-align: left;
+            padding: 25px;
+            align-items: flex-start;
+        }
+        .stats-card i { color: var(--ka-accent); align-self: flex-end; font-size: 2.5em;}
+        .stats-card h3 { color: #2c3e50; font-size: 1.2em;}
+        .stats-card .value { color: var(--ka-accent); font-size: 3.0em; font-weight: 800;}
+        
+        table thead th {
+            background-color: var(--ka-accent);
+            color: white;
+            font-weight: 600;
         }
         /* END NEW STYLES */
     </style>
@@ -176,7 +245,6 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             <h1 style="text-align: left;">Dashboard Pemilik Kotak Amal</h1>
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-weight: 500; color: #555;">Halo, <?php echo htmlspecialchars($nama_pemilik); ?>!</span>
-                <a href="../login/logout.php" class="btn btn-danger">Logout</a>
             </div>
         </div>
 
@@ -187,8 +255,15 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
                 <p class="welcome-text-sidebar">Selamat Datang,<br>
                 <strong><?php echo htmlspecialchars($nama_pemilik); ?> (Pemilik Kotak Amal)</strong></p>
 
-                <a href="#" class="btn btn-primary" disabled><i class="fas fa-edit"></i> Edit Profil</a> 
-                <a href="../login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="<?php echo $base_url; ?>pages/edit_kotak_amal.php?id=<?php echo htmlspecialchars($id_kotak_amal); ?>" class="btn btn-edit-ka">
+                    <i class="fas fa-edit"></i> Edit Kotak Amal
+                </a> 
+                
+                <a href="tambah_laporan.php" class="btn btn-report" style="margin-top: 10px;">
+                    <i class="fas fa-bullhorn"></i> Laporkan Masalah
+                </a>
+                
+                <a href="../login/logout.php" class="btn btn-danger" style="margin-top: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
 
                 <hr>
                 

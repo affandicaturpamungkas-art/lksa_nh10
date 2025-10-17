@@ -2,8 +2,8 @@
 session_start();
 include '../config/database.php';
 
-// Fungsi untuk mengunggah file foto
-function handle_upload($file) {
+// Fungsi untuk mengunggah file foto (MENGGUNAKAN LOGIKA NAMA BARU)
+function handle_upload($file, $nama_toko) {
     $target_dir = "C:/xampp/htdocs/lksa_nh/assets/img/";
     $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     $allowed_extensions = array("jpg", "jpeg", "png", "gif");
@@ -16,7 +16,15 @@ function handle_upload($file) {
         return ['error' => "Maaf, ukuran file terlalu besar."];
     }
 
-    $unique_filename = uniqid('kotak_amal_') . '.' . $file_extension;
+    // Format nama: kotak_amal_nama_toko_uniqid.ext
+    // 1. Hapus karakter non-alfanumerik/spasi
+    $safe_name = preg_replace('/[^a-zA-Z0-9\s]/', '', $nama_toko); 
+    // 2. Ganti spasi dengan underscore
+    $safe_name = str_replace(' ', '_', trim($safe_name)); 
+    $safe_type = "kotak_amal";
+
+    // 3. Gabungkan dan tambahkan uniqid() singkat (5 karakter terakhir)
+    $unique_filename = strtolower($safe_type . '_' . $safe_name . '_' . substr(uniqid(), -5)) . '.' . $file_extension;
     $target_file = $target_dir . $unique_filename;
 
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
@@ -43,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Menangani unggahan foto
     if (!empty($_FILES['foto']['name'])) {
-        $upload_result = handle_upload($_FILES['foto']);
+        $upload_result = handle_upload($_FILES['foto'], $nama_toko);
         if (isset($upload_result['error'])) {
             die($upload_result['error']);
         }

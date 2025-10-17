@@ -3,14 +3,16 @@ session_start();
 include '../config/database.php';
 
 // Authorization check: Semua yang terkait dengan donasi ZIS
-if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA' && $_SESSION['jabatan'] != 'Pegawai') {
+// PERBAIKAN: Menggunakan null coalescing operator (??) untuk mencegah Undefined array key warning
+$jabatan = $_SESSION['jabatan'] ?? '';
+if (!in_array($jabatan, ['Pimpinan', 'Kepala LKSA', 'Pegawai'])) {
     die("Akses ditolak.");
 }
 
 $id_lksa = $_SESSION['id_lksa'];
 
 $sql = "SELECT d.*, u.Nama_User FROM Donatur d JOIN User u ON d.ID_user = u.Id_user";
-if ($_SESSION['jabatan'] != 'Pimpinan') {
+if ($jabatan != 'Pimpinan') {
     $sql .= " WHERE d.ID_LKSA = '$id_lksa'";
 }
 $result = $conn->query($sql);
