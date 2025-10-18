@@ -300,26 +300,45 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            border-radius: 10px; /* Slightly smaller radius */
             overflow: hidden;
+            border: 1px solid var(--border-color); /* New: Add a full border */
         }
 
         th,
         td {
             text-align: left;
             padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #f0f0f0; /* Lighter border */
         }
 
         thead tr {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
+            background-color: var(--tertiary-color); /* Light background */
+            color: var(--primary-color); /* Dark text */
+            font-weight: 700; /* Bolder header text */
+            border-bottom: 2px solid var(--primary-color); /* Primary color line under header */
+        }
+        
+        thead th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        thead th:last-child {
+            border-top-right-radius: 10px;
         }
 
         tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #fff; /* Remove alternating color for a cleaner look */
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f5f5; /* Add hover effect */
+        }
+        
+        /* Ensure the last row does not have a bottom border if it's the only one */
+        tbody tr:last-child td {
+            border-bottom: none;
         }
 
         .form-container {
