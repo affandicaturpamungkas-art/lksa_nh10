@@ -21,19 +21,19 @@ $sidebar_total_donatur_lksa = $conn->query("SELECT COUNT(*) AS total FROM Donatu
 
 // Menetapkan variabel $sidebar_stats untuk digunakan di header.php
 $sidebar_stats = '
-<div class="sidebar-stats-card card-user" style="border-left-color: #3498db;">
+<div class="sidebar-stats-card card-user" style="border-left-color: #1E3A8A;">
     <h4>Total Pegawai LKSA</h4>
     <p>' . number_format($sidebar_total_pegawai) . '</p>
 </div>
-<div class="sidebar-stats-card card-donatur" style="border-left-color: #2ecc71;">
+<div class="sidebar-stats-card card-donatur" style="border-left-color: #10B981;">
     <h4>Total Donatur Terdaftar</h4>
     <p>' . number_format($sidebar_total_donatur_lksa) . '</p>
 </div>
-<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #9b59b6;">
+<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #7C3AED;">
     <h4>Total Sumbangan ZIS LKSA</h4>
     <p>Rp ' . number_format($total_sumbangan_lksa) . '</p>
 </div>
-<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
+<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #F59E0B;">
     <h4>Total Dana Kotak Amal LKSA</h4>
     <p>Rp ' . number_format($total_dana_kotak_amal_lksa) . '</p>
 </div>

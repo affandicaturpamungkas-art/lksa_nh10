@@ -17,12 +17,12 @@ $total_donatur_didaftarkan = $conn->query("SELECT COUNT(*) AS total FROM Donatur
 
 // Menetapkan variabel $sidebar_stats untuk digunakan di header.php
 $sidebar_stats = '
-<div class="sidebar-stats-card card-donatur" style="border-left-color: #2ecc71;">
+<div class="sidebar-stats-card card-donatur" style="border-left-color: #10B981;">
     <h4>Total Donatur Didaftarkan</h4>
     <p>' . number_format($total_donatur_didaftarkan) . '</p>
 </div>
 
-<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #9b59b6;">
+<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #7C3AED;">
     <h4>Total Sumbangan ZIS Diinput</h4>
     <p>Rp ' . number_format($total_sumbangan_pegawai) . '</p>
 </div>

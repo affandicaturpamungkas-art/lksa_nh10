@@ -65,7 +65,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
                 <?php if ($jabatan != 'Pimpinan') { // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
                 <a href="<?php echo $base_url; ?>pages/tambah_laporan.php" class="btn btn-warning"
-                    style="margin-top: 20px; background-color: #e67e22; color: white;">
+                    style="margin-top: 20px; background-color: #F97316; color: white;">
                     <i class="fas fa-bullhorn"></i> Lapor ke Atasan
                 </a>
                 <?php } // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
@@ -100,17 +100,14 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            /* Dark Blue */
-            --secondary-color: #e7b10a;
-            /* Gold */
-            --tertiary-color: #f8f9fa;
-            /* Very Light Gray */
-            --text-dark: #34495e;
+            --primary-color: #1E5128; /* Deep Forest Green (Base/Dark) */
+            --secondary-color: #D8C290; /* Muted Gold/Beige (Accent/Highlight) */
+            --tertiary-color: #F3F7F5; /* Soft Background */
+            --text-dark: #1F2937; /* Dark Slate Gray for general text */
             --text-light: #fff;
-            --bg-light: #f0f2f5;
-            --border-color: #e0e0e0;
-            --form-bg: #fff;
+            --bg-light: #F3F7F5; /* Soft Background */
+            --border-color: #E5E7EB; /* Light border */
+            --form-bg: #FFFFFF;
         }
 
         body {
@@ -126,52 +123,52 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
         .container {
             width: 100%;
-            max-width: 1400px;
+            max-width: 1200px; /* Diperkecil */
             margin: 0 auto;
             padding: 20px;
         }
 
         .header {
-            padding: 20px 30px;
+            padding: 15px 25px; /* Dikecilkan */
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--form-bg);
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Dikecilkan */
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
 
         .header h1 {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.4em; /* Dikecilkan */
             color: var(--primary-color);
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
         }
 
         .content {
-            padding: 40px;
+            padding: 30px 40px; /* Dikecilkan untuk simetri */
             background-color: var(--form-bg);
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             /* NEW: Re-enable original style and add flex for sidebar */
-            margin-top: 20px;
+            margin-top: 15px; /* Dikecilkan */
             display: flex;
-            gap: 40px;
+            gap: 30px; /* Dikecilkan */
             align-items: flex-start;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 10px 20px; /* Dikecilkan */
             border: none;
             cursor: pointer;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 8px; /* Dikecilkan */
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
             display: inline-block;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
         }
 
         .btn-primary {
@@ -180,78 +177,48 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .btn-success {
-            background: #28a745;
+            background: #3AAFA9; /* Teal-Green (Secondary Accent) */
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #F97316; /* Orange/Warning */
             color: white;
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: #EF4444; /* Red */
             color: white;
         }
 
         .btn-cancel {
-            background: #6c757d;
+            background: #6B7280; /* Gray-500 */
             color: white;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px); /* Dikecilkan */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Dikecilkan */
         }
-
-        .summary-card {
-            background-color: var(--tertiary-color);
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            flex: 1;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .summary-card h3 {
-            color: var(--text-dark);
-            margin-top: 0;
-            font-size: 1.2em;
-            font-weight: 600;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .summary-card h1 {
-            color: var(--secondary-color);
-            font-size: 3.5em;
-            margin: 10px 0 0 0;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 25px;
-        }
+        
+        /* Removed unused .summary-card styles */
 
         .dashboard-title {
-            font-size: 2.8em;
+            font-size: 2.0em; /* Dikecilkan */
             font-weight: 700;
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Dikecilkan */
             font-family: 'Montserrat', sans-serif;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px; /* Dikecilkan */
         }
 
         .welcome-text {
-            font-size: 1.6em;
+            font-size: 1.2em; /* Dikecilkan */
             font-weight: 600;
             color: #555;
             margin-top: 0;
+            margin-bottom: 20px; /* Dikecilkan */
         }
 
         .top-nav {
@@ -262,12 +229,12 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             overflow-y: hidden;
             justify-content: flex-start;
             /* Rata kiri untuk scrollable menu */
-            gap: 12px;
+            gap: 8px; /* Dikecilkan */
             background-color: var(--primary-color);
-            padding: 12px 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            padding: 8px 15px; /* Dikecilkan */
+            border-radius: 10px; /* Dikecilkan */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Dikecilkan */
+            margin-bottom: 15px; /* Dikecilkan */
 
             /* SCROLLBAR SEKARANG DITAMPILKAN SEBAGAI PENANDA */
         }
@@ -279,19 +246,20 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             /* Mencegah item menciut */
             text-decoration: none;
             color: var(--text-light);
-            padding: 15px 20px;
+            padding: 10px 15px; /* Dikecilkan */
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 8px; /* Dikecilkan */
             transition: background-color 0.3s, transform 0.2s;
+            font-size: 0.9em; /* Dikecilkan */
         }
 
         .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly brighter hover */
+            transform: translateY(-1px); /* Dikecilkan */
         }
 
         .nav-item.active {
-            background-color: var(--secondary-color);
+            background-color: var(--secondary-color); /* Muted Gold */
             color: var(--primary-color);
             font-weight: 700;
         }
@@ -299,25 +267,26 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Softer shadow */
-            border-radius: 10px; /* Slightly smaller radius */
+            margin-top: 15px; /* Dikecilkan */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05); /* Dikecilkan */
+            border-radius: 10px; /* Dikecilkan */
             overflow: hidden;
-            border: 1px solid var(--border-color); /* New: Add a full border */
+            border: 1px solid var(--border-color);
+            font-size: 0.95em; /* Dikecilkan */
         }
 
         th,
         td {
             text-align: left;
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0; /* Lighter border */
+            padding: 12px; /* Dikecilkan */
+            border-bottom: 1px solid var(--border-color); 
         }
 
         thead tr {
-            background-color: var(--tertiary-color); /* Light background */
-            color: var(--primary-color); /* Dark text */
-            font-weight: 700; /* Bolder header text */
-            border-bottom: 2px solid var(--primary-color); /* Primary color line under header */
+            background-color: var(--primary-color); /* Dark header */
+            color: var(--text-light);
+            font-weight: 600;
+            border-bottom: 2px solid var(--secondary-color);
         }
         
         thead th:first-child {
@@ -329,11 +298,11 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         tbody tr:nth-child(even) {
-            background-color: #fff; /* Remove alternating color for a cleaner look */
+            background-color: #FDFDFD; 
         }
         
         tbody tr:hover {
-            background-color: #f5f5f5; /* Add hover effect */
+            background-color: #F3F4F6; /* Light gray on hover */
         }
         
         /* Ensure the last row does not have a bottom border if it's the only one */
@@ -343,179 +312,170 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
         .form-container {
             background-color: var(--form-bg);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            max-width: 800px;
+            padding: 30px; /* Dikecilkan */
+            border-radius: 12px; /* Dikecilkan */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 700px; /* Dikecilkan */
             margin: 0 auto;
         }
 
         .form-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px; /* Dikecilkan */
         }
 
         .form-section h2 {
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color); /* Gold under header */
+            padding-bottom: 8px; /* Dikecilkan */
+            margin-bottom: 15px; /* Dikecilkan */
             color: var(--primary-color);
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
+            font-size: 1.4em;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Dikecilkan */
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 14px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 10px; /* Dikecilkan */
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* Dikecilkan */
             box-sizing: border-box;
-            font-size: 1em;
+            font-size: 0.95em; /* Dikecilkan */
             font-family: 'Open Sans', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--secondary-color); /* Highlight on focus */
+            box-shadow: 0 0 0 3px rgba(216, 194, 144, 0.3); /* Adjusted for Muted Gold */
+            outline: none;
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Dikecilkan */
+            gap: 15px; /* Dikecilkan */
         }
 
         .form-actions {
             display: flex;
-            gap: 15px;
+            gap: 10px; /* Dikecilkan */
             justify-content: flex-end;
-            margin-top: 30px;
+            margin-top: 25px; /* Dikecilkan */
         }
-
-        .highlight-card {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-        }
-
-        .highlight-card h3,
-        .highlight-card h1 {
-            color: var(--primary-color);
-        }
+        
+        /* Removed .highlight-card style */
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Dikecilkan */
+            gap: 20px; /* Dikecilkan */
+            margin-bottom: 25px; /* Dikecilkan */
         }
-
+        
+        /* --- NEW STYLES FOR STATS CARD ELEGANCE --- */
         .stats-card {
             background-color: #fff;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left; /* Layout Horizontal */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s, box-shadow 0.3s;
-            border-left: 5px solid;
+            border: 1px solid var(--border-color); 
+            border-left: 5px solid; /* Use left border for color accent */
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: row; 
+            justify-content: space-between;
             align-items: center;
         }
 
         .stats-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
 
         .stats-card i {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+            font-size: 2.5em; /* Ikon besar */
+            margin-bottom: 0;
+            flex-shrink: 0;
+            padding-right: 15px;
+            opacity: 0.8; /* Sedikit transparan */
+        }
+        
+        .stats-card-content {
+            flex-grow: 1;
+            text-align: right; /* Angka di kanan */
         }
 
         .stats-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-            color: #2c3e50;
+            margin: 0 0 5px 0;
+            font-size: 0.9em; 
+            color: #555; /* Warna redup untuk judul */
+            font-weight: 600;
         }
 
         .stats-card .value {
-            font-size: 2.5em;
-            font-weight: 700;
+            font-size: 1.8em; /* Angka besar dan menonjol */
+            font-weight: 800;
             margin: 0;
+            line-height: 1.1;
         }
+        
+        /* New large total card style */
+        .stats-card-total-large {
+            background-color: var(--primary-color); /* Deep Forest Green background */
+            color: var(--text-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 15px;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stats-card-total-large h3 {
+            color: var(--text-light);
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+        .stats-card-total-large i {
+            font-size: 3.0em;
+            color: var(--secondary-color); /* Muted Gold */
+            margin-bottom: 10px;
+        }
+        .stats-card-total-large .value {
+            color: var(--secondary-color); /* Muted Gold highlight untuk total */
+            font-size: 3.0em; 
+            font-weight: 900;
+            margin-top: 5px;
+        }
+        /* --- END NEW STYLES --- */
 
-        .card-lksa {
-            border-color: #e7b10a;
-        }
 
-        .card-lksa .value {
-            color: #e7b10a;
-        }
-
-        .card-lksa i {
-            color: #e7b10a;
-        }
-
-        .card-user {
-            border-color: #3498db;
-        }
-
-        .card-user .value {
-            color: #3498db;
-        }
-
-        .card-user i {
-            color: #3498db;
-        }
-
-        .card-donatur {
-            border-color: #2ecc71;
-        }
-
-        .card-donatur .value {
-            color: #2ecc71;
-        }
-
-        .card-donatur i {
-            color: #2ecc71;
-        }
-
-        .card-sumbangan {
-            border-color: #9b59b6;
-        }
-
-        .card-sumbangan .value {
-            color: #9b59b6;
-        }
-
-        .card-sumbangan i {
-            color: #9b59b6;
-        }
-
-        .card-kotak-amal {
-            border-color: #e67e22;
-        }
-
-        .card-kotak-amal .value {
-            color: #e67e22;
-        }
-
-        .card-kotak-amal i {
-            color: #e67e22;
-        }
+        /* NEW CARD COLOR SCHEME */
+        /* Aksen: Gold/Teal/Green/Indigo/Orange */
+        .card-lksa { border-color: #D8C290; } .card-lksa .value { color: #D8C290; } .card-lksa i { color: #D8C290; }
+        .card-user { border-color: #1E5128; } .card-user .value { color: #1E5128; } .card-user i { color: #1E5128; }
+        .card-donatur { border-color: #3AAFA9; } .card-donatur .value { color: #3AAFA9; } .card-donatur i { color: #3AAFA9; } /* Teal-Green */
+        .card-sumbangan { border-color: #6366F1; } .card-sumbangan .value { color: #6366F1; } .card-sumbangan i { color: #6366F1; } /* Indigo */
+        .card-kotak-amal { border-color: #F97316; } .card-kotak-amal .value { color: #F97316; } .card-kotak-amal i { color: #F97316; } /* Orange */
+        .card-total { border-color: #EF4444; } .card-total .value { color: #EF4444; } .card-total i { color: #EF4444; }
 
         /* === NEW SIDEBAR STYLES (Disesuaikan untuk Layout 1 Kolom Utama) === */
         .sidebar-wrapper {
-            width: 280px;
-            /* Lebar Sidebar */
+            width: 220px; /* Dikecilkan */
             flex-shrink: 0;
-            padding: 20px 0;
-            /* padding vertikal */
+            padding: 15px 0; /* Dikecilkan */
             text-align: center;
             border-right: 1px solid var(--border-color);
-            /* Garis pemisah */
-            padding-right: 40px;
+            padding-right: 20px; /* Dikecilkan */
         }
 
         .main-content-area {
@@ -524,59 +484,124 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .profile-img {
-            width: 120px;
-            height: 120px;
+            width: 100px; /* Dikecilkan */
+            height: 100px; /* Dikecilkan */
             object-fit: cover;
             border-radius: 50%;
-            border: 5px solid var(--secondary-color);
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 4px solid var(--secondary-color); /* Dikecilkan */
+            margin-bottom: 10px; /* Dikecilkan */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .welcome-text-sidebar {
-            font-size: 1.2em;
+            font-size: 1.0em; /* Dikecilkan */
             font-weight: 600;
-            margin: 10px 0 20px 0;
+            margin: 5px 0 15px 0; /* Dikecilkan */
             color: var(--primary-color);
         }
 
         .sidebar-stats-card {
-            background-color: var(--bg-light);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            text-align: left;
-            border-left: 5px solid var(--primary-color);
+            background-color: #F8FBFD; /* Very light background */
+            padding: 12px; /* Dikecilkan */
+            border-radius: 8px; /* Dikecilkan */
+            margin-top: 10px; /* Dikecilkan */
+            border-left: 4px solid var(--primary-color); /* Dikecilkan */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .sidebar-stats-card h4 {
-            margin: 0 0 5px 0;
-            font-size: 0.9em;
+            margin: 0 0 4px 0; /* Dikecilkan */
+            font-size: 0.85em; /* Dikecilkan */
             color: #555;
         }
 
         .sidebar-stats-card p {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.3em; /* Dikecilkan */
             font-weight: 700;
             color: var(--primary-color);
         }
 
         .sidebar-wrapper .btn {
             width: 100%;
-            margin-top: 10px;
-            display: block;
-            text-align: center;
-            box-sizing: border-box;
+            margin-top: 8px; /* Dikecilkan */
+            font-size: 0.9em; /* Dikecilkan */
         }
 
         .sidebar-wrapper hr {
-            margin: 20px 0;
+            margin: 15px 0; /* Dikecilkan */
             border: 0;
             border-top: 1px solid var(--border-color);
         }
+        
+        /* === MEDIA QUERIES UNTUK RESPONSIVENESS === */
+        
+        /* Perubahan utama untuk tablet (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .content {
+                gap: 20px; /* Dikecilkan */
+                padding: 20px; /* Dikecilkan */
+            }
+            .sidebar-wrapper {
+                width: 180px; /* Dikecilkan */
+                padding-right: 15px; /* Dikecilkan */
+            }
+            
+            .main-content-area {
+                overflow-x: auto; /* Memungkinkan gulir horizontal untuk konten lebar (misalnya tabel) */
+                padding-bottom: 5px; 
+            }
+        }
+        
+        /* Perubahan untuk perangkat mobile (di bawah 768px) */
+        @media (max-width: 768px) {
+            /* Konten utama menjadi satu kolom vertikal */
+            .content {
+                flex-direction: column;
+                padding: 15px; /* Dikecilkan */
+                gap: 15px; /* Dikecilkan */
+            }
 
+            /* Sidebar mengambil lebar penuh di atas */
+            .sidebar-wrapper {
+                width: 100%;
+                padding-right: 0;
+                border-right: none; /* Hapus garis pemisah vertikal */
+                border-bottom: 1px solid var(--border-color); /* Tambah garis bawah */
+                padding-bottom: 15px; /* Dikecilkan */
+                margin-bottom: 15px; /* Dikecilkan */
+            }
+            
+            /* Konten utama mengambil lebar penuh di bawah */
+            .main-content-area {
+                width: 100%;
+                overflow-x: auto; /* Memastikan tabel bisa di-scroll di mobile */
+            }
+
+            /* Tombol-tombol di sidebar dibuat lebih lebar */
+            .sidebar-wrapper .btn {
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            /* Tata letak statistik di sidebar diubah menjadi vertikal penuh */
+            .sidebar-stats-card {
+                display: block; 
+                width: 100%; 
+                margin-top: 8px; /* Dikecilkan */
+            }
+            
+            .sidebar-wrapper h2 {
+                margin-top: 8px; /* Dikecilkan */
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            
+            .top-nav {
+                padding: 8px; /* Padding menu navigasi lebih kecil */
+            }
+        }
         /* END NEW SIDEBAR STYLES */
     </style>
 </head>
@@ -584,10 +609,8 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 <body>
     <div class="container">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <img src="<?php echo $base_url; ?>assets/img/yayasan.png" alt="Logo Yayasan"
-                    style="width: 70px; height: auto;">
-                <h1>Sistem Informasi ZIS dan Kotak Amal</h1>
+            <div style="display: flex; align-items: center; gap: 10px;"> <img src="<?php echo $base_url; ?>assets/img/yayasan.png" alt="Logo Yayasan"
+                    style="width: 60px; height: auto;"> <h1>Sistem Informasi ZIS dan Kotak Amal</h1>
             </div>
         </div>
         <div class="top-nav">

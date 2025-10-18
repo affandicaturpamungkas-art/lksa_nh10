@@ -4,86 +4,84 @@ include '../config/database.php';
 
 // Ambil data sesi dengan penanganan untuk mencegah Undefined array key warning
 $jabatan_user = $_SESSION['jabatan'] ?? '';
-$id_ka_session = $_SESSION['id_kotak_amal'] ?? '';
-$is_pemilik_ka_logged_in = isset($_SESSION['is_pemilik_kotak_amal']) && $_SESSION['is_pemilik_kotak_amal'] === true;
+$id_donatur_session = $_SESSION['id_donatur'] ?? '';
 
 // Tentukan jenis pengguna
-$is_admin_or_employee = in_array($jabatan_user, ['Pimpinan', 'Kepala LKSA', 'Petugas Kotak Amal']);
+$is_admin_or_employee = in_array($jabatan_user, ['Pimpinan', 'Kepala LKSA', 'Pegawai']);
+$is_donatur_logged_in = !empty($id_donatur_session);
 
 // --- 1. Authorization and ID Determination ---
-if (!$is_admin_or_employee && !$is_pemilik_ka_logged_in) {
+if (!$is_admin_or_employee && !$is_donatur_logged_in) {
     die("Akses ditolak.");
 }
 
-$id_kotak_amal_to_edit = '';
-if ($is_pemilik_ka_logged_in) {
-    // Pemilik Kotak Amal hanya mengedit Kotak Amal mereka
-    $id_kotak_amal_to_edit = $id_ka_session; 
-
-    // Keamanan: Jika Pemilik KA mencoba mengedit ID lain via GET, paksa redirect
-    if (isset($_GET['id']) && $_GET['id'] !== $id_kotak_amal_to_edit) {
-        header("Location: edit_kotak_amal.php?id=" . $id_kotak_amal_to_edit);
+$id_donatur_to_edit = '';
+if ($is_donatur_logged_in) {
+    $id_donatur_to_edit = $id_donatur_session; 
+    
+    if (isset($_GET['id']) && $_GET['id'] !== $id_donatur_to_edit) {
+        header("Location: edit_donatur.php?id=" . $id_donatur_to_edit);
         exit;
     }
 
 } else {
-    // Admin/Pegawai menggunakan parameter GET
-    $id_kotak_amal_to_edit = $_GET['id'] ?? '';
+    $id_donatur_to_edit = $_GET['id'] ?? '';
 }
 
-if (empty($id_kotak_amal_to_edit)) {
-    die("ID Kotak Amal tidak ditemukan.");
+if (empty($id_donatur_to_edit)) {
+    die("ID donatur tidak ditemukan.");
 }
 
-// Set ID Kotak Amal yang akan digunakan di query dan form
-$id_kotak_amal = $id_kotak_amal_to_edit;
+// Set ID donatur yang akan digunakan di query dan form
+$id_donatur = $id_donatur_to_edit;
 
 // Set sidebar_stats ke string kosong agar tidak ada error jika diakses oleh admin
 $sidebar_stats = ''; 
 
-// Memanggil header.php untuk layout admin/karyawan. Non-internal user (Pemilik KA) tidak menggunakan layout ini.
-if (!$is_pemilik_ka_logged_in) {
+// Memanggil header.php untuk layout admin/karyawan. Untuk donatur, ini akan menampilkan header minimal.
+if (!$is_donatur_logged_in) {
     include '../includes/header.php';
 }
-// Ambil data kotak amal dari database
-$sql = "SELECT * FROM KotakAmal WHERE ID_KotakAmal = ?";
+// Ambil data donatur dari database
+$sql = "SELECT * FROM Donatur WHERE ID_donatur = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $id_kotak_amal);
+$stmt->bind_param("s", $id_donatur);
 $stmt->execute();
 $result = $stmt->get_result();
-$data_kotak_amal = $result->fetch_assoc();
-$stmt->close();
+$data_donatur = $result->fetch_assoc();
 
-if (!$data_kotak_amal) {
-    die("Data kotak amal tidak ditemukan.");
+if (!$data_donatur) {
+    die("Data donatur tidak ditemukan.");
 }
 
-// Persiapan untuk layout Pemilik KA yang minimal
-$page_title = $is_pemilik_ka_logged_in ? 'Edit Data Kotak Amal Anda' : 'Edit Kotak Amal';
-if ($is_pemilik_ka_logged_in) {
+// Persiapan untuk layout Donatur yang minimal
+if ($is_donatur_logged_in) {
     $base_url = "http://" . $_SERVER['HTTP_HOST'] . "/lksa_nh/";
+    $foto_donatur = $data_donatur['Foto'] ?? '';
+    $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_url . 'assets/img/yayasan.png'; 
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Kotak Amal</title>
+    <title>Edit Profil Donatur</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ka-accent: #e67e22; /* Orange */
-            --ka-secondary-bg: #f9e9d9;
-            --text-dark: #2c3e50;
+            --donatur-accent: #10B981; /* Emerald Green */ 
+            --donatur-secondary-bg: #E0F2F1; /* Light Green-Cyan */
+            --logout-danger: #EF4444;
+            --text-dark: #1E3A8A; /* Deep Blue */
         }
         body {
             background-image: url('../assets/img/bg.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Open Sans', sans-serif; /* Font Body */
             color: #34495e;
         }
         .form-container {
@@ -91,20 +89,24 @@ if ($is_pemilik_ka_logged_in) {
             margin: 50px auto;
             padding: 40px;
             background-color: #fff;
-            border-radius: 20px;
+            border-radius: 20px; 
             box-shadow: 0 15px 50px rgba(0,0,0,0.1); 
+            transition: all 0.3s ease;
         }
         .form-section {
             padding: 15px 0; 
             margin-bottom: 30px;
             border-top: 1px solid #f0f0f0;
         }
-        .form-section:first-of-type { border-top: none; }
+        .form-section:first-of-type {
+            border-top: none;
+        }
         .form-section h2 {
-            border-bottom: 2px solid var(--ka-accent);
+            /* PERBAIKAN FONT SIZE H2 */
+            border-bottom: 2px solid var(--donatur-accent);
             padding-bottom: 10px;
-            color: var(--ka-accent);
-            font-size: 1.5em;
+            color: var(--donatur-accent);
+            font-size: 1.5em; /* Dikecilkan dari 1.8em */
             margin-bottom: 20px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
@@ -115,57 +117,65 @@ if ($is_pemilik_ka_logged_in) {
             gap: 20px 30px;
         }
         .form-group label {
+            /* PERBAIKAN FONT SIZE LABEL */
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 4px;
+            margin-bottom: 4px; /* Dikecilkan dari 5px */
             display: block;
-            font-size: 0.9em;
+            font-size: 0.9em; /* Dikecilkan dari 0.95em */
         }
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 12px;
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group select, 
+        .form-group textarea {
+            /* PERBAIKAN PADDING INPUT */
+            padding: 12px; /* Dikecilkan dari 14px */
             border: 1px solid #e0e0e0;
             border-radius: 10px; 
             width: 100%;
             box-sizing: border-box;
-            background-color: #fafafa;
-            font-size: 0.95em;
+            background-color: #fafafa; 
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+            font-size: 0.95em; /* Font input standar */
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--ka-accent);
+            border-color: var(--donatur-accent);
             outline: none;
-            box-shadow: 0 0 8px rgba(230, 126, 34, 0.4); 
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); 
             background-color: #fff;
         }
         .form-actions {
-            display: flex;
-            gap: 15px;
+            display: flex; /* Tambahkan kembali flex */
+            gap: 15px; /* Tambahkan gap */
             justify-content: flex-end;
             margin-top: 40px;
         }
         .btn {
             padding: 12px 30px;
-            border: none;
+            border: none; /* Pastikan border hilang */
             cursor: pointer;
             text-decoration: none;
             border-radius: 10px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
             color: white;
-            font-size: 1em;
+            font-size: 1em; /* Mempertahankan ukuran tombol */
             display: inline-block;
         }
-        .btn-success { background-color: var(--ka-accent); }
+        .btn-success { background-color: var(--donatur-accent); }
         .btn-cancel { background-color: #95a5a6; }
-        .btn-success:hover { background-color: #cf6717; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(230, 126, 34, 0.3); }
+        .btn-success:hover { background-color: #059669; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
         .btn-cancel:hover { background-color: #7f8c8d; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(149, 165, 166, 0.3); }
+
+        /* Style untuk Foto Profil yang diperbarui */
         .foto-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            border: 2px dashed var(--ka-accent); 
+            border: 2px dashed var(--donatur-accent); 
             border-radius: 15px;
-            background-color: var(--ka-secondary-bg); 
+            background-color: var(--donatur-secondary-bg); 
             margin-top: 20px;
         }
         .foto-preview {
@@ -177,135 +187,80 @@ if ($is_pemilik_ka_logged_in) {
             box-shadow: 0 0 15px rgba(0,0,0,0.2); 
             margin-bottom: 20px;
         }
-        .upload-group { text-align: center; width: 100%; max-width: 400px; }
-        .upload-group input[type="file"] { border: none; padding: 10px 0; background-color: transparent; }
+        .upload-group {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .upload-group input[type="file"] {
+            border: none;
+            padding: 10px 0;
+            background-color: transparent;
+        }
+
+        /* PERBAIKAN FONT SIZE H1 HEADER */
         .header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Tambahkan kembali space-between */
             align-items: center;
             background-color: #fff;
             padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Tambahkan kembali margin-bottom */
         }
+
         .header h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.3em;
+            font-size: 1.3em; /* Dikecilkan dari 1.5em */
             font-weight: 700;
             margin: 0;
+            color: var(--text-dark);
         }
+        
+        /* PERBAIKAN FONT SIZE H1 CONTAINER */
         .form-container h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.0em;
+            font-size: 2.0em; /* Dikecilkan dari default */
             color: var(--text-dark);
             margin-bottom: 30px;
         }
-        .content { padding: 20px; width: 100%; }
+        
+        .content {
+            padding: 20px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 style="text-align: left;"><i class="fas fa-edit" style="color: var(--ka-accent);"></i> Edit Data Kotak Amal</h1>
-            <a href="dashboard_pemilik_kotak_amal.php" class="btn btn-cancel" style="background-color: #95a5a6; color: white;">
+            <h1 style="text-align: left;"><i class="fas fa-edit" style="color: var(--donatur-accent);"></i> Edit Profil Donatur</h1>
+            <a href="dashboard_donatur.php" class="btn btn-cancel" style="background-color: #95a5a6; color: white;">
                 <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
             </a>
         </div>
 <?php
 } else {
-    // Jika login sebagai Admin/Pegawai, gunakan layout default
+    // Jika login sebagai Admin/Pegawai, style akan datang dari style.css
+    // Menghindari duplikasi header jika bukan Donatur
     echo '<div class="main-content-area" style="flex-grow: 1;">';
-    echo '<h1 class="dashboard-title">' . htmlspecialchars($page_title) . ' (Admin View)</h1>';
+    echo '<h1 class="dashboard-title">Edit Data Donatur (Admin View)</h1>';
 }
 ?>
 
 <div class="content" style="padding: 0; background: none; box-shadow: none;">
     <div class="form-container">
-        <h1><?php echo htmlspecialchars($page_title); ?></h1>
-        <form action="proses_edit_kotak_amal.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_kotak_amal"
-                value="<?php echo htmlspecialchars($data_kotak_amal['ID_KotakAmal']); ?>">
-            <input type="hidden" name="foto_lama" value="<?php echo htmlspecialchars($data_kotak_amal['Foto']); ?>">
-
+        <h1><?php echo $is_donatur_logged_in ? 'Perbarui Data Profil Anda' : 'Edit Data Donatur'; ?></h1>
+        <form action="proses_edit_donatur.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_donatur" value="<?php echo htmlspecialchars($data_donatur['ID_donatur']); ?>">
+            <input type="hidden" name="foto_lama" value="<?php echo htmlspecialchars($data_donatur['Foto']); ?>">
+            
             <div class="form-section">
-                <h2><i class="fas fa-box"></i> Informasi Kotak Amal</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nama Toko:</label>
-                        <input type="text" name="nama_toko"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Nama_Toko']); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat Toko:</label>
-                        <input type="text" name="alamat_toko"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Alamat_Toko']); ?>" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2><i class="fas fa-map-marker-alt"></i> Lokasi Peta (Koordinat)</h2>
-                <p>Saat ini hanya menampilkan input, tidak ada peta interaktif di halaman Edit.</p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Latitude:</label>
-                        <input type="text" name="latitude"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Latitude'] ?? ''); ?>" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Longitude:</label>
-                        <input type="text" name="longitude"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Longitude'] ?? ''); ?>" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2><i class="fas fa-user-tag"></i> Informasi Pemilik</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nama Pemilik:</label>
-                        <input type="text" name="nama_pemilik"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Nama_Pemilik']); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Nomor WA Pemilik:</label>
-                        <input type="text" name="wa_pemilik"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['WA_Pemilik']); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Email Pemilik:</label>
-                        <input type="email" name="email_pemilik"
-                            value="<?php echo htmlspecialchars($data_kotak_amal['Email']); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Jadwal Pengambilan:</label>
-                        <select name="jadwal_pengambilan">
-                            <option value="">-- Pilih Hari --</option>
-                            <?php
-                            $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-                            $jadwal_saat_ini = $data_kotak_amal['Jadwal_Pengambilan'];
-                            foreach ($hari as $h) {
-                                $selected = ($h == $jadwal_saat_ini) ? 'selected' : '';
-                                echo "<option value='{$h}' {$selected}>{$h}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Keterangan:</label>
-                    <textarea name="keterangan" rows="4"
-                        cols="50"><?php echo htmlspecialchars($data_kotak_amal['Ket'] ?? ''); ?></textarea>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2><i class="fas fa-image"></i> Foto Kotak Amal</h2>
+                <h2><i class="fas fa-user-circle"></i> Foto Profil</h2>
                 <div class="foto-container">
-                    <?php if ($data_kotak_amal['Foto']) { ?>
-                        <img src="../assets/img/<?php echo htmlspecialchars($data_kotak_amal['Foto']); ?>" alt="Foto Kotak Amal" class="foto-preview">
+                    <?php if ($data_donatur['Foto']) { ?>
+                        <img src="../assets/img/<?php echo htmlspecialchars($data_donatur['Foto']); ?>" alt="Foto Donatur" class="foto-preview">
                     <?php } else { ?>
                         <div class="foto-preview" style="display: flex; justify-content: center; align-items: center; background-color: #f7f7f7;">
                             <i class="fas fa-camera" style="font-size: 50px; color: #ccc;"></i>
@@ -319,9 +274,42 @@ if ($is_pemilik_ka_logged_in) {
                     </div>
                 </div>
             </div>
+
+            <div class="form-section">
+                <h2><i class="fas fa-info-circle"></i> Informasi Data Diri</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nama Donatur:</label>
+                        <input type="text" name="nama_donatur" value="<?php echo htmlspecialchars($data_donatur['Nama_Donatur']); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor WhatsApp:</label>
+                        <input type="text" name="no_wa" value="<?php echo htmlspecialchars($data_donatur['NO_WA']); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($data_donatur['Email']); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Status Donasi:</label>
+                        <select name="status_donasi">
+                            <option value="Rutin" <?php echo ($data_donatur['Status'] == 'Rutin') ? 'selected' : ''; ?>>Rutin</option>
+                            <option value="Insidental" <?php echo ($data_donatur['Status'] == 'Insidental') ? 'selected' : ''; ?>>Insidental</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             
+            <div class="form-section" style="border-top: 1px solid #f0f0f0;">
+                <h2><i class="fas fa-map-marker-alt"></i> Detail Alamat</h2>
+                <div class="form-group">
+                    <label>Alamat Lengkap:</label>
+                    <textarea name="alamat_lengkap" rows="4" cols="50"><?php echo htmlspecialchars($data_donatur['Alamat_Lengkap']); ?></textarea>
+                </div>
+            </div>
+
             <div class="form-actions">
-                <a href="<?php echo $is_pemilik_ka_logged_in ? 'dashboard_pemilik_kotak_amal.php' : 'kotak-amal.php'; ?>" class="btn btn-cancel"><i class="fas fa-times-circle"></i> Batal</a>
+                <a href="<?php echo $is_donatur_logged_in ? 'dashboard_donatur.php' : 'donatur.php'; ?>" class="btn btn-cancel"><i class="fas fa-times-circle"></i> Batal</a>
                 <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Perubahan</button>
             </div>
         </form>
@@ -329,7 +317,7 @@ if ($is_pemilik_ka_logged_in) {
 </div>
 
 <?php
-if ($is_pemilik_ka_logged_in) {
+if ($is_donatur_logged_in) {
     echo '</div></body></html>';
 } else {
     // Menutup div main-content-area yang dibuka di awal blok else

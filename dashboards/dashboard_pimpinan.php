@@ -28,7 +28,7 @@ $total_sumbangan = $total_sumbangan_donatur + $total_dana_kotak_amal;
 
 // LOGIC BARU UNTUK SIDEBAR
 $id_user = $_SESSION['id_user'] ?? '';
-$user_info_sql = "SELECT Nama_User, Foto FROM User WHERE Id_user = '$id_user'";
+$user_info_sql = "SELECT Nama_User, Foto, Jabatan FROM User WHERE Id_user = '$id_user'";
 $user_info = $conn->query($user_info_sql)->fetch_assoc();
 $nama_user = $user_info['Nama_User'] ?? 'Pengguna';
 $foto_user = $user_info['Foto'] ?? '';
@@ -38,12 +38,13 @@ $sidebar_total_lksa = $conn->query("SELECT COUNT(*) AS total FROM LKSA")->fetch_
 $sidebar_total_user = $conn->query("SELECT COUNT(*) AS total FROM User")->fetch_assoc()['total'];
 
 // Menetapkan variabel $sidebar_stats untuk digunakan di header.php
+// Menggunakan warna baru: #14B8A6 (Teal/Lksa) dan #1F2937 (Dark Navy/User)
 $sidebar_stats = '
-<div class="sidebar-stats-card card-lksa">
+<div class="sidebar-stats-card card-lksa" style="border-left-color: #14B8A6;">
     <h4>Total LKSA Terdaftar</h4>
     <p>' . number_format($sidebar_total_lksa) . '</p>
 </div>
-<div class="sidebar-stats-card card-user" style="border-left-color: #3498db;">
+<div class="sidebar-stats-card card-user" style="border-left-color: #1F2937;">
     <h4>Total Pengguna Sistem</h4>
     <p>' . number_format($sidebar_total_user) . '</p>
 </div>
@@ -56,23 +57,31 @@ include 'includes/header.php'; // <-- LOKASI BARU
 <div class="stats-grid">
     <div class="stats-card card-donatur">
         <i class="fas fa-hand-holding-heart"></i>
-        <h3>Jumlah Donatur</h3>
-        <span class="value"><?php echo number_format($total_donatur); ?></span>
+        <div class="stats-card-content">
+            <h3>Jumlah Donatur</h3>
+            <span class="value"><?php echo number_format($total_donatur); ?></span>
+        </div>
+    </div>
+    <div class="stats-card card-user">
+        <i class="fas fa-users"></i>
+        <div class="stats-card-content">
+            <h3>Total Pengguna Sistem</h3>
+            <span class="value"><?php echo number_format($sidebar_total_user); ?></span>
+        </div>
     </div>
     <div class="stats-card card-sumbangan">
         <i class="fas fa-sack-dollar"></i>
-        <h3>Total Sumbangan Donatur</h3>
-        <span class="value">Rp <?php echo number_format($total_sumbangan_donatur); ?></span>
+        <div class="stats-card-content">
+            <h3>Total Sumbangan Donatur</h3>
+            <span class="value">Rp <?php echo number_format($total_sumbangan_donatur); ?></span>
+        </div>
     </div>
     <div class="stats-card card-kotak-amal">
         <i class="fas fa-box"></i>
-        <h3>Total Kotak Amal</h3>
-        <span class="value"><?php echo number_format($total_kotak_amal); ?></span>
-    </div>
-    <div class="stats-card card-sumbangan-kotak-amal">
-        <i class="fas fa-coins"></i>
-        <h3>Total Sumbangan Kotak Amal</h3>
-        <span class="value">Rp <?php echo number_format($total_dana_kotak_amal); ?></span>
+        <div class="stats-card-content">
+            <h3>Total Kotak Amal</h3>
+            <span class="value"><?php echo number_format($total_kotak_amal); ?></span>
+        </div>
     </div>
 </div>
 
@@ -108,23 +117,29 @@ include 'includes/header.php'; // <-- LOKASI BARU
     </div>
 </form>
 
-<div class="stats-grid">
+<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
     <div class="stats-card card-sumbangan">
         <i class="fas fa-calendar-alt"></i>
-        <h3>Sumbangan Bulan Terpilih</h3>
-        <span class="value">Rp <?php echo number_format($total_sumbangan_bulan_ini); ?></span>
+        <div class="stats-card-content">
+            <h3>Sumbangan Bulan Terpilih (<?php echo $bulan_indonesia[$selected_month]; ?>)</h3>
+            <span class="value">Rp <?php echo number_format($total_sumbangan_bulan_ini); ?></span>
+        </div>
     </div>
     <div class="stats-card card-sumbangan">
         <i class="fas fa-chart-line"></i>
-        <h3>Sumbangan Tahun Terpilih</h3>
-        <span class="value">Rp <?php echo number_format($total_sumbangan_tahun_ini); ?></span>
-    </div>
-    <div class="stats-card card-total">
-        <i class="fas fa-donate"></i>
-        <h3>Total Sumbangan Keseluruhan</h3>
-        <span class="value">Rp <?php echo number_format($total_sumbangan); ?></span>
+        <div class="stats-card-content">
+            <h3>Sumbangan Tahun Terpilih (<?php echo $selected_year; ?>)</h3>
+            <span class="value">Rp <?php echo number_format($total_sumbangan_tahun_ini); ?></span>
+        </div>
     </div>
 </div>
+
+<div class="stats-card-total-large">
+    <i class="fas fa-donate"></i>
+    <h3>Total Sumbangan Keseluruhan (Donatur + Kotak Amal)</h3>
+    <span class="value">Rp <?php echo number_format($total_sumbangan); ?></span>
+</div>
+
 <?php
 include 'includes/footer.php';
 $conn->close();

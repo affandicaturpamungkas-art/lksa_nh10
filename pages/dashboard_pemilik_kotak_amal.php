@@ -79,9 +79,10 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
     <style>
         /* NEW STYLES FOR PEMILIK KOTAK AMAL LAYOUT */
         :root {
-            --ka-accent: #e67e22; /* Orange */
-            --ka-secondary-bg: #f9e9d9;
-            --ka-danger: #dc3545;
+            --ka-accent: #F59E0B; /* Amber/Orange */
+            --ka-secondary-bg: #FEF3C7; /* Light Amber/Yellow */
+            --ka-danger: #EF4444; /* Red */
+            --text-dark: #1E3A8A; /* Deep Blue */
         }
 
         body {
@@ -133,7 +134,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             font-size: 1.2em;
             font-weight: 600;
             margin: 10px 0 20px 0;
-            color: #2c3e50;
+            color: var(--text-dark); /* Deep Blue */
         }
         
         .sidebar-wrapper .btn { 
@@ -152,17 +153,17 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             color: white;
         }
         .sidebar-wrapper .btn-edit-ka:hover {
-            background-color: #cf6717;
+            background-color: #D97706; /* Darker Amber */
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.4);
+            box-shadow: 0 6px 15px rgba(245, 158, 11, 0.4);
         }
         .sidebar-wrapper .btn-report { 
-            background-color: #2ecc71; /* Hijau untuk Lapor */
+            background-color: #10B981; /* Emerald Green untuk Lapor */
             color: white;
             font-weight: 700;
         }
         .sidebar-wrapper .btn-report:hover {
-            background-color: #27ae60; 
+            background-color: #059669; /* Darker Emerald Green */
         }
         .sidebar-wrapper .btn-danger {
             background-color: var(--ka-danger);
@@ -209,7 +210,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             margin: 0;
             font-size: 1.5em;
             font-weight: 700;
-            color: #2c3e50;
+            color: var(--text-dark); /* Deep Blue */
             font-family: 'Montserrat', sans-serif;
         }
         .main-content-area h2 {
@@ -228,7 +229,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             align-items: flex-start;
         }
         .stats-card i { color: var(--ka-accent); align-self: flex-end; font-size: 2.5em;}
-        .stats-card h3 { color: #2c3e50; font-size: 1.2em;}
+        .stats-card h3 { color: var(--text-dark); font-size: 1.2em;} /* Deep Blue */
         .stats-card .value { color: var(--ka-accent); font-size: 3.0em; font-weight: 800;}
         
         table thead th {

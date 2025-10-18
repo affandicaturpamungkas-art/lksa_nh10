@@ -58,12 +58,12 @@ $foto_path = $foto_user ? $base_url . 'assets/img/' . $foto_user : $base_url . '
 
 // Menetapkan variabel $sidebar_stats untuk digunakan di header.php
 $sidebar_stats = '
-<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
+<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #F59E0B;">
     <h4>Total Kotak Amal LKSA</h4>
     <p>' . number_format($total_kotak_amal_dikelola) . '</p>
 </div>
 
-<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #e67e22;">
+<div class="sidebar-stats-card card-kotak-amal" style="border-left-color: #F59E0B;">
     <h4>Total Dana Diambil Sendiri</h4>
     <p>Rp ' . number_format($total_uang_diambil) . '</p>
 </div>

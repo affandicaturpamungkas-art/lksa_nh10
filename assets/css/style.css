@@ -12,7 +12,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif; /* Diubah dari 'Poppins' */
-    color: #2c3e50;
+    color: #1E3A8A; /* Deep Blue */
     font-weight: 700; /* Diperkuat sedikit agar lebih menonjol */
 }
 
@@ -58,7 +58,7 @@ h1, h2, h3, h4, h5, h6 {
 .system-title {
     font-size: 1.2em; 
     font-weight: 700;
-    color: #2c3e50;
+    color: #1E3A8A; /* Deep Blue */
     margin-bottom: 35px; 
     line-height: 1.2;
 }
@@ -74,7 +74,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-group label {
     font-size: 0.9em;
-    color: #2c3e50; 
+    color: #1E3A8A; /* Deep Blue */
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-group label i {
     margin-right: 8px;
-    color: #2c3e50; 
+    color: #1E3A8A; /* Deep Blue */
 }
 
 .form-group input {
@@ -97,15 +97,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .form-group input:focus {
-    border-color: #3498db; 
+    border-color: #06B6D4; /* Cyan/Aqua */
     outline: none;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3); 
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3); 
 }
 
 .btn-login {
     width: 100%;
     padding: 14px;
-    background-color: #3498db; 
+    background-color: #06B6D4; /* Cyan/Aqua */
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -113,20 +113,20 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); 
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); 
     margin-top: 25px; 
 }
 
 .btn-login:hover {
-    background-color: #2980b9; 
+    background-color: #0594a9; /* Darker Cyan/Aqua */
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
 }
 
 .error-message {
     background-color: #fef4f4;
-    color: #c0392b;
-    border: 1px solid #e74c3c;
+    color: #EF4444; /* Red */
+    border: 1px solid #F87171; /* Lighter Red */
     padding: 12px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -154,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
     flex-wrap: wrap; /* Dipertahankan untuk browser yang tidak mendukung nowrap pada flex-item, tapi akan di-override */
     justify-content: center;
     gap: 12px;
-    background-color: #2c3e50;
+    background-color: #1E3A8A; /* Deep Blue */
     padding: 12px 25px;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
@@ -171,9 +171,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-item.active {
-    background-color: #e7b10a;
+    background-color: #06B6D4; /* Cyan/Aqua */
     border-radius: 10px;
-    color: #2c3e50;
+    color: #1E3A8A; /* Deep Blue */
 }
 
 .content {
@@ -217,7 +217,7 @@ h1, h2, h3, h4, h5, h6 {
 .stats-card h3 {
     margin: 0 0 10px 0;
     font-size: 1.1em;
-    color: #2c3e50;
+    color: #1E3A8A; /* Deep Blue */
 }
 
 .stats-card .value {
@@ -226,26 +226,26 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-/* Specific colors for each card */
-.card-lksa { border-color: #e7b10a; }
-.card-lksa .value { color: #e7b10a; }
-.card-lksa i { color: #e7b10a; }
+/* Specific colors for each card (Synced with header.php) */
+.card-lksa { border-color: #06B6D4; }
+.card-lksa .value { color: #06B6D4; }
+.card-lksa i { color: #06B6D4; }
 
-.card-user { border-color: #3498db; }
-.card-user .value { color: #3498db; }
-.card-user i { color: #3498db; }
+.card-user { border-color: #1E3A8A; }
+.card-user .value { color: #1E3A8A; }
+.card-user i { color: #1E3A8A; }
 
-.card-donatur { border-color: #2ecc71; }
-.card-donatur .value { color: #2ecc71; }
-.card-donatur i { color: #2ecc71; }
+.card-donatur { border-color: #10B981; }
+.card-donatur .value { color: #10B981; }
+.card-donatur i { color: #10B981; }
 
-.card-sumbangan { border-color: #9b59b6; }
-.card-sumbangan .value { color: #9b59b6; }
-.card-sumbangan i { color: #9b59b6; }
+.card-sumbangan { border-color: #7C3AED; }
+.card-sumbangan .value { color: #7C3AED; }
+.card-sumbangan i { color: #7C3AED; }
 
-.card-kotak-amal { border-color: #e67e22; }
-.card-kotak-amal .value { color: #e67e22; }
-.card-kotak-amal i { color: #e67e22; }
+.card-kotak-amal { border-color: #F59E0B; }
+.card-kotak-amal .value { color: #F59E0B; }
+.card-kotak-amal i { color: #F59E0B; }
 
 .btn {
     padding: 12px 25px;
@@ -254,19 +254,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-    background-color: #2c3e50;
+    background-color: #1E3A8A;
 }
 
 .btn-success {
-    background-color: #28a745;
+    background-color: #10B981;
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: #EF4444;
 }
 
 .btn-cancel {
-    background-color: #6c757d;
+    background-color: #6B7280;
 }
 
 table {
@@ -275,7 +275,7 @@ table {
 }
 
 thead tr {
-    background-color: #2c3e50;
+    background-color: #1E3A8A;
 }
 
 th, td {

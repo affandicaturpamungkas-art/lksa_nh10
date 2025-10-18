@@ -71,10 +71,10 @@ if ($is_donatur_logged_in) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --donatur-accent: #1abc9c; 
-            --donatur-secondary-bg: #e8f8f5; 
-            --logout-danger: #dc3545;
-            --text-dark: #2c3e50;
+            --donatur-accent: #10B981; /* Emerald Green */ 
+            --donatur-secondary-bg: #E0F2F1; /* Light Green-Cyan */
+            --logout-danger: #EF4444;
+            --text-dark: #1E3A8A; /* Deep Blue */
         }
         body {
             background-image: url('../assets/img/bg.png');
@@ -141,7 +141,7 @@ if ($is_donatur_logged_in) {
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: var(--donatur-accent);
             outline: none;
-            box-shadow: 0 0 8px rgba(26, 188, 156, 0.4); 
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); 
             background-color: #fff;
         }
         .form-actions {
@@ -164,7 +164,7 @@ if ($is_donatur_logged_in) {
         }
         .btn-success { background-color: var(--donatur-accent); }
         .btn-cancel { background-color: #95a5a6; }
-        .btn-success:hover { background-color: #16a085; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(26, 188, 156, 0.3); }
+        .btn-success:hover { background-color: #059669; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
         .btn-cancel:hover { background-color: #7f8c8d; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(149, 165, 166, 0.3); }
 
         /* Style untuk Foto Profil yang diperbarui */
@@ -215,6 +215,7 @@ if ($is_donatur_logged_in) {
             font-size: 1.3em; /* Dikecilkan dari 1.5em */
             font-weight: 700;
             margin: 0;
+            color: var(--text-dark);
         }
         
         /* PERBAIKAN FONT SIZE H1 CONTAINER */

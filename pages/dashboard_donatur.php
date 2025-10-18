@@ -66,11 +66,12 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* NEW STYLES FOR DONATUR LAYOUT */
-        /* Warna Aksen Baru: #1abc9c (Turquoise) */
+        /* Warna Aksen Baru: #10B981 (Emerald Green) */
         :root {
-            --donatur-accent: #1abc9c; 
-            --donatur-secondary-bg: #e8f8f5; /* Light background for stats card */
-            --logout-danger: #dc3545; /* Merah untuk tombol logout */
+            --donatur-accent: #10B981; /* Emerald Green */
+            --donatur-secondary-bg: #E0F2F1; /* Light Green-Cyan */
+            --logout-danger: #EF4444; /* Red */
+            --text-dark: #1E3A8A; /* Deep Blue */
         }
 
         body {
@@ -122,11 +123,11 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-size: 1.2em;
             font-weight: 600;
             margin: 10px 0 20px 0;
-            color: #2c3e50;
+            color: var(--text-dark); /* Deep Blue */
         }
         /* Mengganti btn-primary dan btn-danger dengan gaya kustom */
         .sidebar-wrapper .btn-custom { 
-            background-color: var(--donatur-accent); /* Use Turquoise accent color */
+            background-color: var(--donatur-accent); /* Use Emerald Green accent color */
             color: #fff;
             padding: 12px 25px;
             border: none;
@@ -142,25 +143,25 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .sidebar-wrapper .btn-custom:hover {
-            background-color: #16a085; /* Darker turquoise on hover */
+            background-color: #059669; /* Darker Emerald Green on hover */
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
         /* Gaya khusus untuk tombol Logout */
         .sidebar-wrapper .btn-logout { 
-            background-color: var(--logout-danger); /* Merah */
+            background-color: var(--logout-danger); /* Red */
             color: #fff;
         }
         .sidebar-wrapper .btn-logout:hover {
-            background-color: #c82333; /* Darker red on hover */
+            background-color: #DC2626; /* Darker red on hover */
         }
         .sidebar-wrapper .btn-report { /* Gaya untuk tombol Lapor Masalah */
-            background-color: #e67e22; /* Oranye */
+            background-color: #F59E0B; /* Amber */
             color: white;
             font-weight: 700;
         }
         .sidebar-wrapper .btn-report:hover {
-            background-color: #d35400; 
+            background-color: #D97706; /* Darker Amber */
         }
 
         .sidebar-wrapper hr { 
@@ -203,7 +204,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             margin: 0;
             font-size: 1.5em;
             font-weight: 700;
-            color: #2c3e50;
+            color: var(--text-dark); /* Deep Blue */
             font-family: 'Montserrat', sans-serif;
         }
 
