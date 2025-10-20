@@ -12,7 +12,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif; /* Diubah dari 'Poppins' */
-    color: #1E3A8A; /* Deep Blue */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
     font-weight: 700; /* Diperkuat sedikit agar lebih menonjol */
 }
 
@@ -43,7 +43,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgba(255, 255, 255, 0.9); 
     padding: 35px 45px; 
     border-radius: 15px; 
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Bayangan lebih halus */
     width: 100%;
     max-width: 420px; 
     text-align: center;
@@ -51,14 +51,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .login-container:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px); /* Hover lebih menonjol */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .system-title {
-    font-size: 1.2em; 
-    font-weight: 700;
-    color: #1E3A8A; /* Deep Blue */
+    font-size: 1.3em; /* Sedikit diperbesar */
+    font-weight: 800; /* Lebih tebal */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
     margin-bottom: 35px; 
     line-height: 1.2;
 }
@@ -73,8 +73,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .form-group label {
-    font-size: 0.9em;
-    color: #1E3A8A; /* Deep Blue */
+    font-size: 0.95em; /* Sedikit diperbesar */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -82,14 +82,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-group label i {
     margin-right: 8px;
-    color: #1E3A8A; /* Deep Blue */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
 }
 
 .form-group input {
     width: 100%;
     padding: 14px 15px;
     border: 1px solid #dcdcdc; 
-    border-radius: 8px;
+    border-radius: 10px; /* Lebih membulat */
     box-sizing: border-box;
     font-size: 1em;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -99,17 +99,17 @@ h1, h2, h3, h4, h5, h6 {
 .form-group input:focus {
     border-color: #06B6D4; /* Cyan/Aqua */
     outline: none;
-    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3); 
+    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2); /* Shadow lebih halus */
 }
 
 .btn-login {
     width: 100%;
-    padding: 14px;
+    padding: 15px; /* Lebih tebal */
     background-color: #06B6D4; /* Cyan/Aqua */
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-size: 1em;
+    border-radius: 10px; /* Lebih membulat */
+    font-size: 1.0em;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
@@ -119,8 +119,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-login:hover {
     background-color: #0594a9; /* Darker Cyan/Aqua */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+    transform: translateY(-3px); /* Hover lebih menonjol */
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
 }
 
 .error-message {
@@ -150,11 +150,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .top-nav {
     display: flex;
-    /* GAYA HORIZONTAL SCROLLING DITAMBAH DI INCLUDES/HEADER.PHP */
-    flex-wrap: wrap; /* Dipertahankan untuk browser yang tidak mendukung nowrap pada flex-item, tapi akan di-override */
+    flex-wrap: wrap; 
     justify-content: center;
     gap: 12px;
-    background-color: #1E3A8A; /* Deep Blue */
+    background-color: #1F2937; /* Deep Navy (Diperbarui) */
     padding: 12px 25px;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
@@ -173,7 +172,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-item.active {
     background-color: #06B6D4; /* Cyan/Aqua */
     border-radius: 10px;
-    color: #1E3A8A; /* Deep Blue */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
 }
 
 .content {
@@ -217,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
 .stats-card h3 {
     margin: 0 0 10px 0;
     font-size: 1.1em;
-    color: #1E3A8A; /* Deep Blue */
+    color: #1F2937; /* Deep Navy (Diperbarui) */
 }
 
 .stats-card .value {
@@ -231,9 +230,9 @@ h1, h2, h3, h4, h5, h6 {
 .card-lksa .value { color: #06B6D4; }
 .card-lksa i { color: #06B6D4; }
 
-.card-user { border-color: #1E3A8A; }
-.card-user .value { color: #1E3A8A; }
-.card-user i { color: #1E3A8A; }
+.card-user { border-color: #1F2937; }
+.card-user .value { color: #1F2937; }
+.card-user i { color: #1F2937; }
 
 .card-donatur { border-color: #10B981; }
 .card-donatur .value { color: #10B981; }
@@ -254,11 +253,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-    background-color: #1E3A8A;
+    background-color: #1F2937; /* Deep Navy (Diperbarui) */
 }
 
 .btn-success {
-    background-color: #10B981;
+    background-color: #10B981; /* Emerald Green (Diperbarui) */
 }
 
 .btn-danger {
@@ -275,7 +274,7 @@ table {
 }
 
 thead tr {
-    background-color: #1E3A8A;
+    background-color: #1F2937; /* Deep Navy (Diperbarui) */
 }
 
 th, td {

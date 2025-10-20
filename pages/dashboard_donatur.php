@@ -71,7 +71,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             --donatur-accent: #10B981; /* Emerald Green */
             --donatur-secondary-bg: #E0F2F1; /* Light Green-Cyan */
             --logout-danger: #EF4444; /* Red */
-            --text-dark: #1E3A8A; /* Deep Blue */
+            --text-dark: #1F2937; /* Deep Navy (Diperbarui) */
         }
 
         body {
@@ -91,7 +91,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             padding: 40px;
             background-color: #fff;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Bayangan lebih menonjol dan elegan */
             margin-top: 20px; 
             display: flex;
             gap: 40px; 
@@ -117,13 +117,13 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             border-radius: 50%;
             border: 5px solid var(--donatur-accent); /* Menggunakan warna baru */
             margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Bayangan lebih jelas */
         }
         .welcome-text-sidebar {
             font-size: 1.2em;
             font-weight: 600;
             margin: 10px 0 20px 0;
-            color: var(--text-dark); /* Deep Blue */
+            color: var(--text-dark); /* Deep Navy */
         }
         /* Mengganti btn-primary dan btn-danger dengan gaya kustom */
         .sidebar-wrapper .btn-custom { 
@@ -144,8 +144,8 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
         }
         .sidebar-wrapper .btn-custom:hover {
             background-color: #059669; /* Darker Emerald Green on hover */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(16, 185, 129, 0.4); /* Shadow khusus hover */
         }
         /* Gaya khusus untuk tombol Logout */
         .sidebar-wrapper .btn-logout { 
@@ -156,12 +156,12 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             background-color: #DC2626; /* Darker red on hover */
         }
         .sidebar-wrapper .btn-report { /* Gaya untuk tombol Lapor Masalah */
-            background-color: #F59E0B; /* Amber */
+            background-color: #3B82F6; /* Strong Blue (Diperbarui) */
             color: white;
             font-weight: 700;
         }
         .sidebar-wrapper .btn-report:hover {
-            background-color: #D97706; /* Darker Amber */
+            background-color: #2563EB; /* Darker Blue */
         }
 
         .sidebar-wrapper hr { 
@@ -190,55 +190,37 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             color: var(--donatur-accent); /* Menggunakan warna baru */
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
             margin-bottom: 0;
         }
         .header h1 {
-            text-align: left;
-            margin: 0;
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--text-dark); /* Deep Blue */
-            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark); /* Deep Navy */
         }
 
         /* STYLING TAMBAHAN UNTUK DASHBOARD DONATUR */
         .stats-card {
-            text-align: left; /* Mengubah alignment kartu statistik */
-            padding: 25px;
+            text-align: left;
+            padding: 30px; /* Lebih lega */
             align-items: flex-start;
+            border-radius: 15px; /* Lebih membulat */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Shadow elegan */
         }
         
         .stats-card i {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            align-self: flex-end; /* Pindahkan icon ke kanan atas */
+            font-size: 3.0em; /* Ikon lebih besar */
         }
         
         .stats-card h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2em; /* Perbesar sedikit judul */
+            font-size: 1.3em;
+            color: var(--text-dark); /* Deep Navy */
         }
         
         .stats-card .value {
-            font-size: 3.0em; /* Perbesar nominal */
+            font-size: 3.5em;
             font-weight: 800;
         }
-
-        .stats-card i { color: var(--donatur-accent); } 
-        .card-donatur { 
-            border-color: var(--donatur-accent); 
-            background-color: var(--donatur-secondary-bg); /* Latar belakang untuk menonjolkan */
-        }
-        .card-donatur .value { color: var(--donatur-accent); }
         
-        /* NEW TABLE STYLES FOR READABILITY */
         .main-content-area h2 {
             font-size: 1.8em;
             color: var(--donatur-accent);
@@ -248,24 +230,12 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-family: 'Montserrat', sans-serif;
         }
 
-        .money-col {
-            text-align: right !important; 
-            font-weight: 700;
-            color: #34495e; /* Warna teks gelap */
-        }
-
         table thead th {
             background-color: var(--donatur-accent);
             color: white;
             font-weight: 600;
         }
         
-        .no-data {
-            font-style: italic;
-            padding: 20px;
-            text-align: center !important;
-        }
-        /* END NEW STYLES */
     </style>
 </head>
 <body>

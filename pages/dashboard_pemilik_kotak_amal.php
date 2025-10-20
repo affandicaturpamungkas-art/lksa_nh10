@@ -79,10 +79,10 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
     <style>
         /* NEW STYLES FOR PEMILIK KOTAK AMAL LAYOUT */
         :root {
-            --ka-accent: #F59E0B; /* Amber/Orange */
+            --ka-accent: #F97316; /* Orange (Diperbarui) */
             --ka-secondary-bg: #FEF3C7; /* Light Amber/Yellow */
             --ka-danger: #EF4444; /* Red */
-            --text-dark: #1E3A8A; /* Deep Blue */
+            --text-dark: #1F2937; /* Deep Navy (Diperbarui) */
         }
 
         body {
@@ -101,7 +101,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             padding: 40px;
             background-color: #fff;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Bayangan lebih menonjol dan elegan */
             margin-top: 20px; 
             display: flex;
             gap: 40px; 
@@ -128,13 +128,13 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             border-radius: 50%;
             border: 5px solid var(--ka-accent);
             margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Bayangan lebih jelas */
         }
         .welcome-text-sidebar {
             font-size: 1.2em;
             font-weight: 600;
             margin: 10px 0 20px 0;
-            color: var(--text-dark); /* Deep Blue */
+            color: var(--text-dark); /* Deep Navy */
         }
         
         .sidebar-wrapper .btn { 
@@ -145,6 +145,8 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             box-sizing: border-box;
             font-family: 'Open Sans', sans-serif;
             font-weight: 600;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         
         /* Gaya Tombol Edit dan Logout */
@@ -153,17 +155,18 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             color: white;
         }
         .sidebar-wrapper .btn-edit-ka:hover {
-            background-color: #D97706; /* Darker Amber */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(245, 158, 11, 0.4);
+            background-color: #C2410C; /* Darker Orange (Diperbarui) */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(249, 115, 22, 0.4);
         }
         .sidebar-wrapper .btn-report { 
-            background-color: #10B981; /* Emerald Green untuk Lapor */
+            background-color: #3B82F6; /* Strong Blue (Diperbarui) */
             color: white;
             font-weight: 700;
         }
         .sidebar-wrapper .btn-report:hover {
-            background-color: #059669; /* Darker Emerald Green */
+            background-color: #2563EB; /* Darker Blue (Diperbarui) */
+            transform: translateY(-3px);
         }
         .sidebar-wrapper .btn-danger {
             background-color: var(--ka-danger);
@@ -172,7 +175,7 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
 
         .sidebar-stats-card {
             background-color: var(--ka-secondary-bg);
-            padding: 15px;
+            padding: 18px; /* Lebih lega */
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
@@ -196,22 +199,12 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             border-top: 1px solid #e0e0e0;
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
             margin-bottom: 0;
         }
         .header h1 {
-            text-align: left;
-            margin: 0;
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--text-dark); /* Deep Blue */
-            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark); /* Deep Navy */
         }
         .main-content-area h2 {
             font-size: 1.8em;
@@ -225,12 +218,14 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             border-left: 5px solid var(--ka-accent);
             background-color: var(--ka-secondary-bg);
             text-align: left;
-            padding: 25px;
+            padding: 30px; /* Lebih lega */
             align-items: flex-start;
+            border-radius: 15px; /* Lebih membulat */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Shadow elegan */
         }
-        .stats-card i { color: var(--ka-accent); align-self: flex-end; font-size: 2.5em;}
-        .stats-card h3 { color: var(--text-dark); font-size: 1.2em;} /* Deep Blue */
-        .stats-card .value { color: var(--ka-accent); font-size: 3.0em; font-weight: 800;}
+        .stats-card i { color: var(--ka-accent); align-self: flex-end; font-size: 3.0em;} /* Ikon lebih besar */
+        .stats-card h3 { color: var(--text-dark); font-size: 1.3em;} /* Deep Navy */
+        .stats-card .value { color: var(--ka-accent); font-size: 3.5em; font-weight: 800;} /* Angka lebih besar */
         
         table thead th {
             background-color: var(--ka-accent);

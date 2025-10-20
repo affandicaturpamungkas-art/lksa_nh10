@@ -100,12 +100,12 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1E5128; /* Deep Forest Green (Base/Dark) */
-            --secondary-color: #D8C290; /* Muted Gold/Beige (Accent/Highlight) */
-            --tertiary-color: #F3F7F5; /* Soft Background */
+            --primary-color: #1F2937; /* Dark Navy/Slate (Base/Dark) */
+            --secondary-color: #06B6D4; /* Aqua/Cyan (Accent/Highlight) */
+            --tertiary-color: #F9FAFB; /* Soft Background (Baru) */
             --text-dark: #1F2937; /* Dark Slate Gray for general text */
             --text-light: #fff;
-            --bg-light: #F3F7F5; /* Soft Background */
+            --bg-light: #F9FAFB; /* Soft Background (Baru) */
             --border-color: #E5E7EB; /* Light border */
             --form-bg: #FFFFFF;
         }
@@ -177,7 +177,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .btn-success {
-            background: #3AAFA9; /* Teal-Green (Secondary Accent) */
+            background: #10B981; /* Emerald Green */
             color: white;
         }
         
@@ -223,11 +223,10 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
         .top-nav {
             display: flex;
-            /* **PERBAIKAN KRITIS UNTUK SATU BARIS DAN SCROLLING** */
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            overflow-y: hidden;
-            justify-content: flex-start;
+            /* **PERUBAHAN KRITIS: Mengganti nowrap ke wrap dan menghilangkan overflow-x** */
+            flex-wrap: wrap; /* Izinkan item turun ke baris baru */
+            overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal */
+            justify-content: center; /* Rata tengah agar terlihat rapi saat wrap */
             /* Rata kiri untuk scrollable menu */
             gap: 8px; /* Dikecilkan */
             background-color: var(--primary-color);
@@ -259,7 +258,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .nav-item.active {
-            background-color: var(--secondary-color); /* Muted Gold */
+            background-color: var(--secondary-color); /* Aqua/Cyan */
             color: var(--primary-color);
             font-weight: 700;
         }
@@ -324,7 +323,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .form-section h2 {
-            border-bottom: 2px solid var(--secondary-color); /* Gold under header */
+            border-bottom: 2px solid var(--secondary-color); /* Aqua/Cyan under header */
             padding-bottom: 8px; /* Dikecilkan */
             margin-bottom: 15px; /* Dikecilkan */
             color: var(--primary-color);
@@ -352,7 +351,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: var(--secondary-color); /* Highlight on focus */
-            box-shadow: 0 0 0 3px rgba(216, 194, 144, 0.3); /* Adjusted for Muted Gold */
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3); /* Adjusted for Aqua/Cyan */
             outline: none;
         }
 
@@ -428,7 +427,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         
         /* New large total card style */
         .stats-card-total-large {
-            background-color: var(--primary-color); /* Deep Forest Green background */
+            background-color: var(--primary-color); /* Deep Navy background */
             color: var(--text-light);
             padding: 30px;
             border-radius: 12px;
@@ -447,11 +446,11 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
         .stats-card-total-large i {
             font-size: 3.0em;
-            color: var(--secondary-color); /* Muted Gold */
+            color: var(--secondary-color); /* Aqua/Cyan */
             margin-bottom: 10px;
         }
         .stats-card-total-large .value {
-            color: var(--secondary-color); /* Muted Gold highlight untuk total */
+            color: var(--secondary-color); /* Aqua/Cyan highlight untuk total */
             font-size: 3.0em; 
             font-weight: 900;
             margin-top: 5px;
@@ -460,10 +459,10 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 
 
         /* NEW CARD COLOR SCHEME */
-        /* Aksen: Gold/Teal/Green/Indigo/Orange */
-        .card-lksa { border-color: #D8C290; } .card-lksa .value { color: #D8C290; } .card-lksa i { color: #D8C290; }
-        .card-user { border-color: #1E5128; } .card-user .value { color: #1E5128; } .card-user i { color: #1E5128; }
-        .card-donatur { border-color: #3AAFA9; } .card-donatur .value { color: #3AAFA9; } .card-donatur i { color: #3AAFA9; } /* Teal-Green */
+        /* Aksen: Aqua/Deep Navy/Emerald/Indigo/Orange */
+        .card-lksa { border-color: #06B6D4; } .card-lksa .value { color: #06B6D4; } .card-lksa i { color: #06B6D4; }
+        .card-user { border-color: #1F2937; } .card-user .value { color: #1F2937; } .card-user i { color: #1F2937; }
+        .card-donatur { border-color: #10B981; } .card-donatur .value { color: #10B981; } .card-donatur i { color: #10B981; } /* Emerald Green */
         .card-sumbangan { border-color: #6366F1; } .card-sumbangan .value { color: #6366F1; } .card-sumbangan i { color: #6366F1; } /* Indigo */
         .card-kotak-amal { border-color: #F97316; } .card-kotak-amal .value { color: #F97316; } .card-kotak-amal i { color: #F97316; } /* Orange */
         .card-total { border-color: #EF4444; } .card-total .value { color: #EF4444; } .card-total i { color: #EF4444; }
