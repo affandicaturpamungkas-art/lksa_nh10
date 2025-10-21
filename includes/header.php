@@ -91,7 +91,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi ZIS dan Kotak Amal</title>
+    <title>Give Track - Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</title> 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -368,7 +368,7 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             margin-top: 25px; /* Dikecilkan */
         }
         
-        /* Removed .highlight-card style */
+        /* Removed unused .summary-card styles */
 
         .stats-grid {
             display: grid;
@@ -495,36 +495,16 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         .welcome-text-sidebar {
             font-size: 1.0em; /* Dikecilkan */
             font-weight: 600;
-            margin: 5px 0 15px 0; /* Dikecilkan */
-            color: var(--primary-color);
-        }
-
-        .sidebar-stats-card {
-            background-color: #F8FBFD; /* Very light background */
-            padding: 12px; /* Dikecilkan */
-            border-radius: 8px; /* Dikecilkan */
-            margin-top: 10px; /* Dikecilkan */
-            border-left: 4px solid var(--primary-color); /* Dikecilkan */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-stats-card h4 {
-            margin: 0 0 4px 0; /* Dikecilkan */
-            font-size: 0.85em; /* Dikecilkan */
-            color: #555;
-        }
-
-        .sidebar-stats-card p {
-            margin: 0;
-            font-size: 1.3em; /* Dikecilkan */
-            font-weight: 700;
+            margin: 5px auto 15px auto; /* FIX: Tambahkan auto untuk centering */
             color: var(--primary-color);
         }
 
         .sidebar-wrapper .btn {
             width: 100%;
-            margin-top: 8px; /* Dikecilkan */
+            max-width: 200px; /* FIX: Menyesuaikan lebar dengan content area (220px - 20px padding kanan) */
+            margin: 8px auto 0 auto; /* FIX: Ganti margin-top dan tambahkan auto untuk centering */
             font-size: 0.9em; /* Dikecilkan */
+            box-sizing: border-box; /* FIX: Pastikan padding termasuk dalam lebar */
         }
 
         .sidebar-wrapper hr {
@@ -608,8 +588,15 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 <body>
     <div class="container">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 10px;"> <img src="<?php echo $base_url; ?>assets/img/yayasan.png" alt="Logo Yayasan"
-                    style="width: 60px; height: auto;"> <h1>Sistem Informasi ZIS dan Kotak Amal</h1>
+            <div style="display: flex; align-items: center; gap: 10px;"> 
+                <div style="text-align: left; line-height: 1.2; padding-top: 5px;">
+                    <span style="font-size: 0.8em; color: var(--text-dark); display: block; margin: 0;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
+                    <h1 style="margin: 0; font-size: 2.0em; font-weight: 900; font-family: 'Montserrat', sans-serif;">
+                         <img src="<?php echo $base_url; ?>assets/img/give_track_logo_final.png" alt="Give Track Logo System"
+                            style="height: 50px; width: auto; margin: 0; padding: 0; vertical-align: middle;">
+                    </h1> 
+                    <span style="font-size: 0.7em; color: #555; display: block; margin: 0;">mendonasikan, mengapresiasi, dan menjaga keberlanjutan kebaikan</span>
+                </div>
             </div>
         </div>
         <div class="top-nav">

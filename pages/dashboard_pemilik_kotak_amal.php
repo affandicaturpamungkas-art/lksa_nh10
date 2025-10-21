@@ -3,68 +3,50 @@ session_start();
 include '../config/database.php';
 
 // Verifikasi sesi pemilik kotak amal
-if (!isset($_SESSION['is_pemilik_kotak_amal'])) {
+if (!isset($_SESSION['is_pemilik_kotak_amal']) || !$_SESSION['is_pemilik_kotak_amal']) {
     header("Location: ../login/login.php");
     exit;
 }
 
 $id_kotak_amal = $_SESSION['id_kotak_amal'];
-// Mengambil Nama Pemilik dari DB berdasarkan ID Kotak Amal
-$sql_pemilik = "SELECT Nama_Pemilik FROM KotakAmal WHERE ID_KotakAmal = ?";
-$stmt_pemilik = $conn->prepare($sql_pemilik);
-$stmt_pemilik->bind_param("s", $id_kotak_amal);
-$stmt_pemilik->execute();
-$result_pemilik = $stmt_pemilik->get_result();
-$nama_pemilik = $result_pemilik->fetch_assoc()['Nama_Pemilik'] ?? 'Pemilik Kotak Amal';
-$stmt_pemilik->close();
 
-// Setting session ID Pemilik Kotak Amal untuk laporan (ID Kotak Amal berfungsi sebagai ID Pemilik di konteks ini)
-$_SESSION['id_pemilik'] = $id_kotak_amal; 
+// Fetch Nama Pemilik Kotak Amal, Nama Toko, dan Foto
+$sql_data = "SELECT Nama_Pemilik, Nama_Toko, Foto FROM KotakAmal WHERE ID_KotakAmal = '$id_kotak_amal'";
+$result_data = $conn->query($sql_data);
+$pemilik_data = $result_data->fetch_assoc();
+$nama_pemilik = $pemilik_data['Nama_Pemilik'] ?? 'Pemilik Kotak Amal';
+$nama_toko = $pemilik_data['Nama_Toko'] ?? 'Lokasi Kotak Amal';
+$foto_kotak_amal = $pemilik_data['Foto'] ?? '';
+$_SESSION['nama_pemilik'] = $nama_pemilik;
 
+// Hitung Total Dana Kotak Amal (Seluruh Waktu)
+// Menggunakan 'JmlUang' (sudah diperbaiki di langkah sebelumnya)
+$sql_total = "SELECT SUM(JmlUang) AS total_dana FROM Dana_KotakAmal 
+              WHERE ID_KotakAmal = '$id_kotak_amal'";
+$result_total = $conn->query($sql_total);
+$total_data = $result_total->fetch_assoc();
+$total_dana = $total_data['total_dana'] ?? 0;
 
-$total_uang_diambil = 0;
-$result_history = null;
+// Hitung Jumlah Pengambilan
+$sql_count = "SELECT COUNT(ID_Kwitansi_KA) AS jumlah_pengambilan FROM Dana_KotakAmal 
+              WHERE ID_KotakAmal = '$id_kotak_amal'";
+$result_count = $conn->query($sql_count);
+$count_data = $result_count->fetch_assoc();
+$jumlah_pengambilan = $count_data['jumlah_pengambilan'] ?? 0;
 
-// Query untuk mendapatkan total uang yang diambil
-$sql_total = "SELECT SUM(JmlUang) AS total FROM Dana_KotakAmal WHERE ID_KotakAmal = ?";
-$stmt_total = $conn->prepare($sql_total);
-if ($stmt_total) {
-    $stmt_total->bind_param("s", $id_kotak_amal);
-    $stmt_total->execute();
-    $result_total = $stmt_total->get_result();
-    $total_uang_diambil = $result_total->fetch_assoc()['total'] ?? 0;
-    $stmt_total->close();
-}
-
-// Query untuk mendapatkan riwayat pengambilan
-$sql_history = "SELECT dka.*, u.Nama_User 
-                FROM Dana_KotakAmal dka
-                LEFT JOIN User u ON dka.Id_user = u.Id_user
-                WHERE dka.ID_KotakAmal = ?
-                ORDER BY dka.Tgl_Ambil desc";
-$stmt_history = $conn->prepare($sql_history);
-if ($stmt_history) {
-    $stmt_history->bind_param("s", $id_kotak_amal);
-    $stmt_history->execute();
-    $result_history = $stmt_history->get_result();
-    $stmt_history->close();
-}
-
-// LOGIC BARU UNTUK SIDEBAR
-// Ambil foto kotak amal (asumsi KotakAmal table has a Foto column)
-$sql_kotak_amal_foto = "SELECT Foto FROM KotakAmal WHERE ID_KotakAmal = ?";
-$stmt_foto = $conn->prepare($sql_kotak_amal_foto);
-$stmt_foto->bind_param("s", $id_kotak_amal);
-$stmt_foto->execute();
-$foto_result = $stmt_foto->get_result();
-$foto_row = $foto_result->fetch_assoc();
-$foto_kotak_amal = $foto_row['Foto'] ?? '';
-$stmt_foto->close();
+// Ambil Riwayat Pengambilan Dana
+$sql_riwayat = "SELECT dka.*, u.Nama_User FROM Dana_KotakAmal dka 
+                LEFT JOIN User u ON dka.ID_user = u.Id_user
+                WHERE dka.ID_KotakAmal = '$id_kotak_amal'
+                ORDER BY dka.Tgl_Ambil DESC";
+$result_riwayat = $conn->query($sql_riwayat);
 
 $base_url = "http://" . $_SERVER['HTTP_HOST'] . "/lksa_nh/";
-$foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $base_url . 'assets/img/yayasan.png'; 
-?>
+// Menggunakan foto dari database, fallback ke foto default kotak amal
+$foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $base_url . 'assets/img/kotak_amal_makmur_deb0a.jpg';
 
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -77,12 +59,13 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* NEW STYLES FOR PEMILIK KOTAK AMAL LAYOUT */
+        /* NEW STYLES FOR KOTAK AMAL LAYOUT (Sidebar Enabled) */
+        /* Warna Aksen Baru: #1D4ED8 (Royal Blue) - Diperbarui untuk Kotak Amal */
         :root {
-            --ka-accent: #F97316; /* Orange (Diperbarui) */
-            --ka-secondary-bg: #FEF3C7; /* Light Amber/Yellow */
-            --ka-danger: #EF4444; /* Red */
-            --text-dark: #1F2937; /* Deep Navy (Diperbarui) */
+            --ka-accent: #1D4ED8; /* Royal Blue */
+            --ka-secondary-bg: #DBEAFE; /* Light Blue */
+            --logout-danger: #EF4444; /* Red */
+            --text-dark: #1F2937; /* Deep Navy */
         }
 
         body {
@@ -97,11 +80,12 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             padding: 20px;
         }
         
+        /* Layout Utama dengan Sidebar */
         .content { 
             padding: 40px;
             background-color: #fff;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Bayangan lebih menonjol dan elegan */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             margin-top: 20px; 
             display: flex;
             gap: 40px; 
@@ -120,66 +104,72 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             flex-grow: 1;
             padding: 0;
         }
-
         .profile-img {
             width: 120px;
             height: 120px;
             object-fit: cover;
             border-radius: 50%;
-            border: 5px solid var(--ka-accent);
+            border: 5px solid var(--ka-accent); 
             margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Bayangan lebih jelas */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
         }
         .welcome-text-sidebar {
             font-size: 1.2em;
             font-weight: 600;
             margin: 10px 0 20px 0;
-            color: var(--text-dark); /* Deep Navy */
+            color: var(--text-dark);
         }
         
-        .sidebar-wrapper .btn { 
+        .sidebar-wrapper .btn-custom { 
+            background-color: var(--ka-accent); 
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
             width: 100%;
             margin-top: 10px;
-            display: block;
-            text-align: center;
             box-sizing: border-box;
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 600;
-            border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        
-        /* Gaya Tombol Edit dan Logout */
-        .sidebar-wrapper .btn-edit-ka {
-            background-color: var(--ka-accent);
-            color: white;
-        }
-        .sidebar-wrapper .btn-edit-ka:hover {
-            background-color: #C2410C; /* Darker Orange (Diperbarui) */
+        .sidebar-wrapper .btn-custom:hover {
+            background-color: #1E40AF; /* Darker Blue on hover */
             transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 8px 15px rgba(29, 78, 216, 0.4); 
+        }
+        
+        .sidebar-wrapper .btn-logout { 
+            background-color: var(--logout-danger); 
+            color: #fff;
+        }
+        .sidebar-wrapper .btn-logout:hover {
+            background-color: #DC2626; 
         }
         .sidebar-wrapper .btn-report { 
-            background-color: #3B82F6; /* Strong Blue (Diperbarui) */
+            background-color: #3B82F6; 
             color: white;
             font-weight: 700;
         }
         .sidebar-wrapper .btn-report:hover {
-            background-color: #2563EB; /* Darker Blue (Diperbarui) */
-            transform: translateY(-3px);
-        }
-        .sidebar-wrapper .btn-danger {
-            background-color: var(--ka-danger);
-            color: white;
+            background-color: #2563EB; 
         }
 
+        .sidebar-wrapper hr { 
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #e0e0e0;
+        }
         .sidebar-stats-card {
             background-color: var(--ka-secondary-bg);
-            padding: 18px; /* Lebih lega */
+            padding: 18px;
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
-            border-left: 5px solid var(--ka-accent);
+            border-left: 5px solid var(--ka-accent); 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .sidebar-stats-card h4 {
@@ -191,21 +181,40 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             margin: 0;
             font-size: 1.5em;
             font-weight: 700;
-            color: var(--ka-accent);
-        }
-        .sidebar-wrapper hr { 
-            margin: 20px 0;
-            border: 0;
-            border-top: 1px solid #e0e0e0;
+            color: var(--ka-accent); 
         }
         .header {
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
             margin-bottom: 0;
         }
-        .header h1 {
-            color: var(--text-dark); /* Deep Navy */
+
+        /* STYLING TAMBAHAN UNTUK DASHBOARD KOTAK AMAL */
+        .stats-card {
+            background-color: #fff; /* Reset background for main content */
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+        
+        .stats-card i {
+            color: var(--ka-accent); /* Ikon berwarna aksen */
+            font-size: 3.0em;
+        }
+        
+        .stats-card h3 {
+            font-size: 1.3em;
+            color: var(--text-dark); 
+        }
+        
+        .stats-card .value {
+            font-size: 3.5em;
+            font-weight: 800;
+            color: var(--ka-accent);
+        }
+        
         .main-content-area h2 {
             font-size: 1.8em;
             color: var(--ka-accent);
@@ -214,100 +223,97 @@ $foto_path = $foto_kotak_amal ? $base_url . 'assets/img/' . $foto_kotak_amal : $
             margin-top: 40px;
             font-family: 'Montserrat', sans-serif;
         }
-        .stats-card {
-            border-left: 5px solid var(--ka-accent);
-            background-color: var(--ka-secondary-bg);
-            text-align: left;
-            padding: 30px; /* Lebih lega */
-            align-items: flex-start;
-            border-radius: 15px; /* Lebih membulat */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Shadow elegan */
-        }
-        .stats-card i { color: var(--ka-accent); align-self: flex-end; font-size: 3.0em;} /* Ikon lebih besar */
-        .stats-card h3 { color: var(--text-dark); font-size: 1.3em;} /* Deep Navy */
-        .stats-card .value { color: var(--ka-accent); font-size: 3.5em; font-weight: 800;} /* Angka lebih besar */
-        
+
         table thead th {
             background-color: var(--ka-accent);
             color: white;
             font-weight: 600;
         }
-        /* END NEW STYLES */
+        
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 style="text-align: left;">Dashboard Pemilik Kotak Amal</h1>
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 500; color: #555;">Halo, <?php echo htmlspecialchars($nama_pemilik); ?>!</span>
+                <div style="text-align: left; line-height: 1.2; padding-top: 5px;">
+                    <span style="font-size: 0.8em; color: #1F2937; display: block; margin: 0;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
+                    <h1 style="margin: 0; font-size: 2.0em; font-weight: 900; font-family: 'Montserrat', sans-serif;">
+                         <img src="../assets/img/give_track_logo_final.png" alt="Give Track Logo System"
+                            style="height: 40px; width: auto; margin: 0; padding: 0; vertical-align: middle;">
+                    </h1> 
+                    <span style="font-size: 0.7em; color: #555; display: block; margin: 0;">mendonasikan, mengapresiasi, dan menjaga keberlanjutan kebaikan</span>
+                </div>
             </div>
+            
         </div>
-
         <div class="content">
             <div class="sidebar-wrapper">
                 <img src="<?php echo htmlspecialchars($foto_path); ?>" alt="Foto Kotak Amal" class="profile-img">
                 
                 <p class="welcome-text-sidebar">Selamat Datang,<br>
-                <strong><?php echo htmlspecialchars($nama_pemilik); ?> (Pemilik Kotak Amal)</strong></p>
+                <strong><?php echo htmlspecialchars($nama_pemilik); ?> (Pemilik KA)</strong></p>
+                <p style="margin-top: -10px; font-size: 0.9em; color: #777;">Lokasi: **<?php echo htmlspecialchars($nama_toko); ?>**</p>
 
-                <a href="<?php echo $base_url; ?>pages/edit_kotak_amal.php?id=<?php echo htmlspecialchars($id_kotak_amal); ?>" class="btn btn-edit-ka">
-                    <i class="fas fa-edit"></i> Edit Kotak Amal
-                </a> 
+                <a href="<?php echo $base_url; ?>pages/edit_pemilik_kotak_amal.php" class="btn btn-custom"><i class="fas fa-edit"></i> Edit Data Kotak Amal</a>
                 
-                <a href="tambah_laporan.php" class="btn btn-report" style="margin-top: 10px;">
+                <a href="tambah_laporan.php" class="btn btn-custom btn-report" style="margin-top: 10px;">
                     <i class="fas fa-bullhorn"></i> Laporkan Masalah
                 </a>
-                
-                <a href="../login/logout.php" class="btn btn-danger" style="margin-top: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
 
+                <a href="../login/logout.php" class="btn btn-custom btn-logout" style="margin-top: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                
                 <hr>
                 
                 <div class="sidebar-stats-card">
-                    <h4>Total Uang Diambil</h4>
-                    <p>Rp <?php echo number_format($total_uang_diambil); ?></p>
+                    <h4>Total Dana Terkumpul (All Time)</h4>
+                    <p>Rp <?php echo number_format($total_dana, 0, ',', '.'); ?></p>
+                </div>
+                <div class="sidebar-stats-card">
+                    <h4>Frekuensi Pengambilan</h4>
+                    <p><?php echo number_format($jumlah_pengambilan, 0, ',', '.'); ?>x</p>
                 </div>
             </div>
             <div class="main-content-area">
-                <p style="text-align: left;">Selamat datang di dashboard kotak amal Anda. Di sini Anda dapat melihat riwayat dan total dana yang telah terkumpul.</p>
+                <p style="text-align: left; font-size: 1.1em; color: #555;">Selamat datang di Dashboard Kotak Amal Anda. Pantau total dana yang terkumpul dan riwayat pengambilan.</p>
                 
                 <div class="stats-grid" style="grid-template-columns: 1fr;">
                     <div class="stats-card card-kotak-amal">
-                        <i class="fas fa-box"></i>
-                        <h3>Total Uang Terkumpul</h3>
-                        <span class="value">Rp <?php echo number_format($total_uang_diambil); ?></span>
+                        <i class="fas fa-box-open"></i>
+                        <h3>Total Dana yang Terkumpul Keseluruhan</h3>
+                        <span class="value">Rp <?php echo number_format($total_dana, 0, ',', '.'); ?></span>
                     </div>
                 </div>
 
-                <h2>Riwayat Pengambilan</h2>
-                <table>
+                <h2>Riwayat Pengambilan Dana Kotak Amal</h2>
+                <table style="font-size: 0.95em;">
                     <thead>
                         <tr>
-                            <th>ID Kwitansi</th>
-                            <th>Jumlah Uang</th>
-                            <th>Tanggal Ambil</th>
-                            <th>Petugas</th>
+                            <th><i class="fas fa-receipt"></i> ID Kwitansi KA</th>
+                            <th><i class="fas fa-calendar"></i> Tanggal Ambil</th>
+                            <th><i class="fas fa-coins"></i> Nominal</th> 
+                            <th><i class="fas fa-user-tag"></i> Petugas Pengambil</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($result_history && $result_history->num_rows > 0) { ?>
-                            <?php while ($row = $result_history->fetch_assoc()) { ?>
+                        <?php if ($result_riwayat->num_rows > 0) { ?>
+                            <?php while ($row = $result_riwayat->fetch_assoc()) { ?>
                                 <tr>
-                                    <td><?php echo $row['ID_Kwitansi_KA']; ?></td>
-                                    <td>Rp <?php echo number_format($row['JmlUang']); ?></td>
-                                    <td><?php echo $row['Tgl_Ambil']; ?></td>
-                                    <td><?php echo htmlspecialchars($row['Nama_User'] ?? 'Admin'); ?></td>
+                                    <td><?php echo htmlspecialchars($row['ID_Kwitansi_KA']); ?></td>
+                                    <td><?php echo date('d-m-Y', strtotime($row['Tgl_Ambil'])); ?></td>
+                                    <td class="money-col">Rp. <?php echo number_format($row['JmlUang'], 0, ',', '.'); ?></td>
+                                    <td><?php echo htmlspecialchars($row['Nama_User'] ?? 'N/A'); ?></td>
                                 </tr>
                             <?php } ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="4" class="no-data">Belum ada data pengambilan yang tercatat.</td>
+                                <td colspan="4" class="no-data">Belum ada riwayat pengambilan dana kotak amal yang tercatat.</td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
             </div>
-        </div>
+            </div>
     </div>
 </body>
 </html>

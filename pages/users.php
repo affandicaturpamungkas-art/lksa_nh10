@@ -31,7 +31,6 @@ $result = $conn->query($sql);
 <table>
     <thead>
         <tr>
-            <th>ID User</th>
             <th>Nama User</th>
             <th>Jabatan</th>
             <th>Foto</th>
@@ -41,7 +40,6 @@ $result = $conn->query($sql);
     <tbody>
         <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
-                <td><?php echo $row['Id_user']; ?></td>
                 <td><?php echo $row['Nama_User']; ?></td>
                 <td><?php echo $row['Jabatan']; ?></td>
                 <td>

@@ -44,6 +44,9 @@ function generate_user_id($conn, $jabatan, $id_lksa) {
 
     $prefix_user = '';
     switch ($jabatan) {
+        case 'Pimpinan': // Pimpinan Cabang/Regional
+            $prefix_user = "PIMPINAN_" . $daerah . "_NH_";
+            break;
         case 'Kepala LKSA':
             $prefix_user = "KEPALA_LKSA_" . $daerah . "_NH_";
             break;
@@ -103,6 +106,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ssssss", $id_user, $nama_user, $password, $jabatan, $id_lksa, $foto_path);
         
         if ($stmt->execute()) {
+            
+            // --- LOGIKA UPDATE NAMA PIMPINAN/KEPALA LKSA ---
+            // Jika jabatan adalah Pimpinan atau Kepala LKSA, update Nama_Pimpinan di tabel LKSA
+            if ($jabatan == 'Pimpinan' || $jabatan == 'Kepala LKSA') {
+                // Gunakan Nama_Pimpinan (dengan underscore) sesuai skema database
+                $update_pimpinan_sql = "UPDATE LKSA SET Nama_Pimpinan = ? WHERE Id_lksa = ?";
+                $update_pimpinan_stmt = $conn->prepare($update_pimpinan_sql);
+                $update_pimpinan_stmt->bind_param("ss", $nama_user, $id_lksa);
+                $update_pimpinan_stmt->execute();
+                $update_pimpinan_stmt->close();
+            }
+            // --- END LOGIKA UPDATE NAMA PIMPINAN/KEPALA LKSA ---
+
             header("Location: users.php");
         } else {
             echo "Error: " . $stmt->error;
@@ -123,6 +139,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($foto_path && $foto_lama && file_exists("C:/xampp/htdocs/lksa_nh/assets/img/" . $foto_lama)) {
                 unlink("C:/xampp/htdocs/lksa_nh/assets/img/" . $foto_lama);
             }
+            
+            // Perluasan logika edit: Jika jabatan diubah menjadi Pimpinan/Kepala LKSA, update nama di tabel LKSA
+            if ($jabatan == 'Pimpinan' || $jabatan == 'Kepala LKSA') {
+                $update_pimpinan_sql = "UPDATE LKSA SET Nama_Pimpinan = ? WHERE Id_lksa = ?";
+                $update_pimpinan_stmt = $conn->prepare($update_pimpinan_sql);
+                $update_pimpinan_stmt->bind_param("ss", $nama_user, $id_lksa);
+                $update_pimpinan_stmt->execute();
+                $update_pimpinan_stmt->close();
+            }
+            
             header("Location: users.php");
         } else {
             echo "Error: " . $stmt->error;

@@ -2,8 +2,8 @@
 session_start();
 include '../config/database.php';
 
-// Pastikan hanya Pimpinan yang bisa mengakses halaman ini
-if ($_SESSION['jabatan'] != 'Pimpinan') {
+// Pastikan hanya Pimpinan Pusat yang bisa mengakses halaman ini
+if ($_SESSION['jabatan'] != 'Pimpinan' || $_SESSION['id_lksa'] != 'Pimpinan_Pusat') {
     die("Akses ditolak. Anda tidak memiliki izin untuk melihat halaman ini.");
 }
 
@@ -17,14 +17,15 @@ $sidebar_stats = '';
 include '../includes/header.php'; // <-- LOKASI BARU
 ?>
 <h1 class="dashboard-title">Manajemen LKSA</h1>
-<p>Halaman ini memungkinkan Anda untuk mengelola semua data LKSA yang terdaftar.</p>
+<p>Halaman ini memungkinkan Anda untuk mengelola semua data LKSA yang terdaftar (kantor cabang).</p>
 
-<a href="tambah_pimpinan.php" class="btn btn-success" style="margin-bottom: 20px;">Tambah LKSA</a>
+<a href="tambah_lksa.php" class="btn btn-success" style="margin-bottom: 20px;">Tambah LKSA (Kantor Cabang)</a>
 
 <table>
     <thead>
         <tr>
             <th>ID LKSA</th>
+            <th>Nama LKSA</th>
             <th>Nama Pimpinan</th>
             <th>Alamat</th>
             <th>Tanggal Daftar</th>
@@ -35,7 +36,8 @@ include '../includes/header.php'; // <-- LOKASI BARU
         <?php while($row = $result->fetch_assoc()) { ?>
             <tr>
                 <td><?php echo $row['Id_lksa']; ?></td>
-                <td><?php echo $row['Nama_Pimpinan']; ?></td>
+                <td><?php echo $row['Nama_LKSA'] ?? 'N/A'; ?></td>
+                <td><?php echo $row['Nama_Pimpinan'] ?? 'Belum Ditunjuk'; ?></td>
                 <td><?php echo $row['Alamat']; ?></td>
                 <td><?php echo $row['Tanggal_Daftar']; ?></td>
                 <td>

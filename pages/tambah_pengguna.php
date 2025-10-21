@@ -7,7 +7,7 @@ if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA')
     die("Akses ditolak.");
 }
 
-$sql_lksa = "SELECT Id_lksa FROM LKSA";
+$sql_lksa = "SELECT Id_lksa, Nama_LKSA FROM LKSA"; // Ambil juga Nama_LKSA
 $result_lksa = $conn->query($sql_lksa);
 
 $sidebar_stats = ''; // Pastikan sidebar tampil
@@ -35,7 +35,15 @@ include '../includes/header.php'; // LOKASI BARU
                 <div class="form-group">
                     <label>Jabatan:</label>
                     <select name="jabatan" required>
-                        <?php if ($_SESSION['jabatan'] == 'Pimpinan') { ?>
+                        <?php 
+                        $is_pimpinan_pusat = ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] == 'Pimpinan_Pusat');
+                        
+                        if ($is_pimpinan_pusat) { ?>
+                            <option value="Pimpinan">Pimpinan (Cabang)</option> 
+                            <option value="Kepala LKSA">Kepala LKSA</option>
+                            <option value="Pegawai">Pegawai</option>
+                            <option value="Petugas Kotak Amal">Petugas Kotak Amal</option>
+                        <?php } elseif ($_SESSION['jabatan'] == 'Pimpinan') { ?>
                             <option value="Kepala LKSA">Kepala LKSA</option>
                             <option value="Pegawai">Pegawai</option>
                             <option value="Petugas Kotak Amal">Petugas Kotak Amal</option>
@@ -47,14 +55,17 @@ include '../includes/header.php'; // LOKASI BARU
                 </div>
                 <div class="form-group">
                     <label>ID LKSA:</label>
-                    <?php if ($_SESSION['jabatan'] == 'Kepala LKSA') { ?>
+                    <?php 
+                    if ($_SESSION['jabatan'] == 'Kepala LKSA' || ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] != 'Pimpinan_Pusat')) { 
+                        // Kepala LKSA dan Pimpinan Cabang hanya bisa membuat user di LKSA/cabang-nya sendiri
+                    ?>
                         <input type="text" name="id_lksa" value="<?php echo htmlspecialchars($_SESSION['id_lksa']); ?>" readonly required>
                     <?php } else { ?>
                         <select name="id_lksa" required>
                             <option value="">-- Pilih LKSA --</option>
                             <?php while ($row_lksa = $result_lksa->fetch_assoc()) { ?>
                                 <option value="<?php echo htmlspecialchars($row_lksa['Id_lksa']); ?>">
-                                    <?php echo htmlspecialchars($row_lksa['Id_lksa']); ?>
+                                    <?php echo htmlspecialchars($row_lksa['Id_lksa']); ?> (<?php echo htmlspecialchars($row_lksa['Nama_LKSA'] ?? 'N/A'); ?>)
                                 </option>
                             <?php } ?>
                         </select>

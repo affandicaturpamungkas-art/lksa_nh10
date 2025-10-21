@@ -89,9 +89,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login-container">
-        <img src="../assets/img/yayasan.png" alt="Logo Yayasan" class="login-logo-small" style="width: 70px; margin-bottom: 15px;">
         
-        <h1 class="system-title">Sistem Informasi ZIS dan Kotak Amal</h1>
+        <div style="text-align: center; line-height: 1.2; margin-bottom: 35px;">
+            
+            <img src="../assets/img/give_track_logo_final.png" alt="Give Track Logo System"
+                style="height: 50px; width: auto; margin-bottom: 15px;">
+        </div>
         
         <?php if (!empty($error)) { echo "<p class='error-message'>$error</p>"; } ?>
         <form method="post" action="">

@@ -14,6 +14,7 @@ $total_donasi = 0;
 $result_history = null;
 
 // Query untuk mendapatkan total donasi
+// FIX: Mengganti 'Nominal' dengan penjumlahan kolom ZIS
 $sql_total = "SELECT SUM(Zakat_Profesi + Zakat_Maal + Infaq + Sedekah + Fidyah) AS total_donasi FROM Sumbangan WHERE ID_donatur = ?";
 $stmt_total = $conn->prepare($sql_total);
 if ($stmt_total) {
@@ -25,6 +26,7 @@ if ($stmt_total) {
 }
 
 // Query untuk mendapatkan riwayat donasi dan nama user yang menginput
+// FIX: Memastikan semua kolom ZIS ditarik (s.*)
 $sql_history = "SELECT s.*, u.Nama_User 
                 FROM Sumbangan s 
                 LEFT JOIN User u ON s.ID_User = u.Id_user 
@@ -241,10 +243,17 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
 <body>
     <div class="container">
         <div class="header">
-            <h1 style="text-align: left;"><i class="fas fa-hand-holding-heart" style="color: var(--donatur-accent);"></i> Portal Donatur ZIS & Kotak Amal</h1>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 500; color: #555;">Halo, <?php echo htmlspecialchars($nama_donatur); ?>!</span>
+            <div style="display: flex; align-items: center; gap: 10px;"> 
+                <div style="text-align: left; line-height: 1.2; padding-top: 5px;">
+                    <span style="font-size: 0.8em; color: #1F2937; display: block; margin: 0;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
+                    <h1 style="margin: 0; font-size: 2.0em; font-weight: 900; font-family: 'Montserrat', sans-serif;">
+                         <img src="../assets/img/give_track_logo_final.png" alt="Give Track Logo System"
+                            style="height: 40px; width: auto; margin: 0; padding: 0; vertical-align: middle;">
+                    </h1> 
+                    <span style="font-size: 0.7em; color: #555; display: block; margin: 0;">mendonasikan, mengapresiasi, dan menjaga keberlanjutan kebaikan</span>
+                </div>
             </div>
+            
         </div>
 
         <div class="content">
@@ -294,6 +303,7 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
                     <tbody>
                         <?php if ($result_history && $result_history->num_rows > 0) { ?>
                             <?php while ($row = $result_history->fetch_assoc()) { 
+                                // FIX: Menghitung total uang ZIS dari kolom individual
                                 $total_uang_zis = $row['Zakat_Profesi'] + $row['Zakat_Maal'] + $row['Infaq'] + $row['Sedekah'] + $row['Fidyah'];
                                 $natura_display = !empty($row['Natura']) ? htmlspecialchars($row['Natura']) : '-';
                             ?>
