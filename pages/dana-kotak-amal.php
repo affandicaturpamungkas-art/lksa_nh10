@@ -26,9 +26,22 @@ $sql_history = "SELECT dka.*, ka.Nama_Toko, u.Nama_User
 if ($_SESSION['jabatan'] != 'Pimpinan') {
     $sql_history .= " WHERE dka.Id_lksa = '$id_lksa'";
 }
+$sql_history .= " ORDER BY dka.Tgl_Ambil DESC"; // Tambahkan order by agar data terbaru di atas
 $result_history = $conn->query($sql_history);
 
 ?>
+<style>
+    /* Style tambahan untuk tombol ikon yang sederhana */
+    .btn-action-icon {
+        padding: 5px 10px;
+        margin: 0 2px;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+    .btn-edit {
+        background-color: #6B7280; /* Gray/Cancel color */
+    }
+</style>
 <h1 class="dashboard-title">Pengambilan Kotak Amal</h1>
 <p>Catat pengambilan dana dari kotak amal dan lihat riwayatnya.</p>
 
@@ -42,7 +55,12 @@ $result_history = $conn->query($sql_history);
                 <label>Pilih Kotak Amal:</label>
                 <select name="id_kotak_amal" required>
                     <option value="">-- Pilih Kotak Amal --</option>
-                    <?php while ($row_ka = $result_kotak_amal->fetch_assoc()) { ?>
+                    <?php 
+                    // Reset pointer result_kotak_amal
+                    if ($result_kotak_amal->num_rows > 0) {
+                        $result_kotak_amal->data_seek(0);
+                    }
+                    while ($row_ka = $result_kotak_amal->fetch_assoc()) { ?>
                         <option value="<?php echo htmlspecialchars($row_ka['ID_KotakAmal']); ?>">
                             <?php echo htmlspecialchars($row_ka['Nama_Toko']); ?>
                         </option>
@@ -56,7 +74,7 @@ $result_history = $conn->query($sql_history);
             </div>
 
             <div class="form-actions" style="justify-content: flex-start;">
-                <button type="submit" class="btn btn-success">Simpan Pengambilan</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Pengambilan</button>
             </div>
         </form>
     </div>
@@ -71,6 +89,7 @@ $result_history = $conn->query($sql_history);
             <th>Jumlah Uang</th>
             <th>Tanggal Ambil</th>
             <th>Petugas</th>
+            <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -81,6 +100,10 @@ $result_history = $conn->query($sql_history);
                 <td>Rp <?php echo number_format($row_hist['JmlUang']); ?></td>
                 <td><?php echo $row_hist['Tgl_Ambil']; ?></td>
                 <td><?php echo $row_hist['Nama_User']; ?></td>
+                <td>
+                    <a href="edit_dana_kotak_amal.php?id=<?php echo $row_hist['ID_Kwitansi_KA']; ?>" class="btn btn-primary btn-action-icon btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="hapus_dana_kotak_amal.php?id=<?php echo $row_hist['ID_Kwitansi_KA']; ?>" class="btn btn-danger btn-action-icon" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data pengambilan ini?');"><i class="fas fa-trash"></i></a>
+                </td>
             </tr>
         <?php } ?>
     </tbody>

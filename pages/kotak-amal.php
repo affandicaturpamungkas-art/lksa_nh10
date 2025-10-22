@@ -10,20 +10,31 @@ if ($_SESSION['jabatan'] != 'Pimpinan' && $_SESSION['jabatan'] != 'Kepala LKSA' 
 
 $id_lksa = $_SESSION['id_lksa'];
 
-// Kueri SQL yang diperbarui untuk menghindari duplikasi
-// Menggunakan LEFT JOIN dan GROUP BY untuk mendapatkan satu baris per kotak amal
+// Kueri SQL yang diperbarui untuk menghindari duplikasi (ka.* mengambil semua kolom, termasuk Nama_Pemilik dan Jadwal_Pengambilan)
 $sql = "SELECT ka.*, MAX(dka.ID_Kwitansi_KA) AS is_collected_today
         FROM KotakAmal ka
         LEFT JOIN Dana_KotakAmal dka ON ka.ID_KotakAmal = dka.ID_KotakAmal AND dka.Tgl_Ambil = CURDATE()";
 
+// LOGIKA PEMBATASAN BERDASARKAN LKSA DIHAPUS AGAR SEMUA PENGGUNA BISA MELIHAT SEMUA KOTAK AMAL SECARA GLOBAL.
+/*
 if ($_SESSION['jabatan'] != 'Pimpinan') {
     $sql .= " WHERE ka.Id_lksa = '$id_lksa'";
 }
+*/
 
 $sql .= " GROUP BY ka.ID_KotakAmal";
 
 $result = $conn->query($sql);
 ?>
+<style>
+    /* Style tambahan untuk tombol ikon yang sederhana */
+    .btn-action-icon {
+        padding: 5px 10px;
+        margin: 0 2px;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+</style>
 <h1 class="dashboard-title">Manajemen Kotak Amal</h1>
 <p>Kelola data kotak amal.</p>
 <a href="tambah_kotak_amal.php" class="btn btn-success">Tambah Kotak Amal</a>
@@ -33,7 +44,9 @@ $result = $conn->query($sql);
         <tr>
             <th>ID Kotak Amal</th>
             <th>Nama Toko</th>
+            <th>Nama Pemilik</th>
             <th>Alamat</th>
+            <th>Jadwal Ambil</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -42,13 +55,18 @@ $result = $conn->query($sql);
             <tr>
                 <td><?php echo $row['ID_KotakAmal']; ?></td>
                 <td><?php echo $row['Nama_Toko']; ?></td>
+                <td><?php echo $row['Nama_Pemilik']; ?></td>
                 <td><?php echo $row['Alamat_Toko']; ?></td>
+                <td><?php echo $row['Jadwal_Pengambilan']; ?></td>
                 <td>
-                    <a href="edit_kotak_amal.php?id=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-primary">Edit</a>
+                    <a href="detail_kotak_amal.php?id=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-primary btn-action-icon" title="Lihat Profil & Lokasi"><i class="fas fa-map-marked-alt"></i></a>
+                    
+                    <a href="edit_kotak_amal.php?id=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-primary btn-action-icon" title="Edit"><i class="fas fa-edit"></i></a>
+                    
                     <?php if ($row['is_collected_today']) { ?>
-                        <span style="color: green; font-weight: bold;">Sudah Diambil</span>
+                        <span style="color: green; font-weight: bold; font-size: 0.9em; margin-left: 5px;">Sudah Diambil</span>
                     <?php } else { ?>
-                        <a href="dana-kotak-amal.php?id_kotak_amal=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-success">Pengambilan</a>
+                        <a href="dana-kotak-amal.php?id_kotak_amal=<?php echo $row['ID_KotakAmal']; ?>" class="btn btn-success" style="padding: 5px 10px; font-size: 0.9em;">Pengambilan</a>
                     <?php } ?>
                 </td>
             </tr>

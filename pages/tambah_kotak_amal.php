@@ -37,22 +37,26 @@ include '../includes/header.php'; // LOKASI BARU
         </div>
 
         <div class="form-section">
-            <h2>Pilih Lokasi di Peta</h2>
+            <h2>Dapatkan Lokasi Sekarang</h2>
             <div class="form-group">
-                <label>Pilih Lokasi dengan Menandai di Peta:</label>
-                <div id="map" style="height: 400px; width: 100%;"></div>
-                <small>Geser marker atau klik peta untuk menempatkan lokasi.</small>
+                <p>Klik tombol di bawah ini untuk mengambil Latitude dan Longitude otomatis dari perangkat Anda.</p>
+                
+                <button type="button" id="getLocationButton" class="btn btn-primary" style="background-color: #F97316; margin-bottom: 15px;">
+                    <i class="fas fa-location-arrow"></i> Simpan Lokasi Sekarang
+                </button>
             </div>
+            
             <div class="form-grid">
                 <div class="form-group">
                     <label>Latitude:</label>
-                    <input type="text" id="latitude" name="latitude" readonly required>
+                    <input type="text" id="latitude" name="latitude" readonly required placeholder="Otomatis terisi setelah tombol diklik.">
                 </div>
                 <div class="form-group">
                     <label>Longitude:</label>
-                    <input type="text" id="longitude" name="longitude" readonly required>
+                    <input type="text" id="longitude" name="longitude" readonly required placeholder="Otomatis terisi setelah tombol diklik.">
                 </div>
             </div>
+            <small>Koordinat ini akan tersimpan saat Anda menekan tombol "Simpan Kotak Amal".</small>
         </div>
 
         <div class="form-section">
@@ -101,49 +105,80 @@ include '../includes/header.php'; // LOKASI BARU
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-success">Simpan Kotak Amal</button>
-            <a href="kotak-amal.php" class="btn btn-cancel">Batal</a>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan Kotak Amal</button>
+            <a href="kotak-amal.php" class="btn btn-cancel"><i class="fas fa-times-circle"></i> Batal</a>
         </div>
     </form>
 </div>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-let map;
-let marker;
+document.addEventListener('DOMContentLoaded', () => {
+    const getLocationButton = document.getElementById('getLocationButton');
+    const latitudeInput = document.getElementById('latitude');
+    const longitudeInput = document.getElementById('longitude');
 
-function initMap() {
-    const defaultPos = { lat: -7.5583, lng: 110.8252 }; // Solo sebagai default
+    function getLocation() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error("Browser tidak mendukung geolocation."));
+            }
+            // Menggunakan opsi untuk akurasi tinggi dan timeout
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+            navigator.geolocation.getCurrentPosition(
+                pos => resolve(pos.coords),
+                err => reject(err),
+                options
+            );
+        });
+    }
 
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        center: defaultPos,
+    getLocationButton.addEventListener('click', async () => {
+        try {
+            Swal.fire({
+                title: 'Mengambil Lokasi...',
+                text: 'Mohon tunggu sebentar. Pastikan izin lokasi diaktifkan.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            const coords = await getLocation();
+            const { latitude, longitude } = coords;
+
+            // Mengisi koordinat ke dalam field form dengan presisi 8 desimal
+            latitudeInput.value = latitude.toFixed(8);
+            longitudeInput.value = longitude.toFixed(8);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Lokasi Berhasil Diambil!',
+                text: `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}. Data siap disimpan.`,
+                confirmButtonColor: '#10B981',
+            });
+
+        } catch (err) {
+            Swal.close();
+            let errorMessage = 'Tidak bisa mendapatkan lokasi. Pastikan izin lokasi diaktifkan di browser Anda.';
+            if (err.code === 1) { 
+                errorMessage = 'Anda menolak izin untuk mengakses lokasi.';
+            } else if (err.code === 2) { 
+                errorMessage = 'Lokasi tidak tersedia atau gagal mendapatkan lokasi.';
+            } else if (err.code === 3) { 
+                errorMessage = 'Waktu pengambilan lokasi habis. Coba lagi.';
+            } else {
+                errorMessage = `Terjadi kesalahan saat mengambil lokasi.`;
+            }
+            Swal.fire('Error!', errorMessage, 'error');
+        }
     });
-
-    marker = new google.maps.Marker({
-        position: defaultPos,
-        map: map,
-        draggable: true,
-    });
-
-    // Set koordinat awal ke input
-    document.getElementById('latitude').value = defaultPos.lat;
-    document.getElementById('longitude').value = defaultPos.lng;
-
-    // Update koordinat saat marker dipindah
-    marker.addListener('dragend', function() {
-        const pos = marker.getPosition();
-        document.getElementById('latitude').value = pos.lat().toFixed(8);
-        document.getElementById('longitude').value = pos.lng().toFixed(8);
-    });
-
-    // Klik peta untuk pindahkan marker
-    map.addListener('click', function(event) {
-        marker.setPosition(event.latLng);
-        document.getElementById('latitude').value = event.latLng.lat().toFixed(8);
-        document.getElementById('longitude').value = event.latLng.lng().toFixed(8);
-    });
-}
+});
 </script>
 
 <?php

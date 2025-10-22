@@ -71,6 +71,15 @@ $sidebar_stats = '
 
 include 'includes/header.php'; // <-- LOKASI BARU
 ?>
+<style>
+    /* Style tambahan untuk tombol ikon yang sederhana */
+    .btn-action-icon {
+        padding: 5px 10px;
+        margin: 0 2px;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+</style>
 <p>Anda dapat mengelola data kotak amal dan pengambilan dananya.</p>
 <h2>Ringkasan Kotak Amal</h2>
 <div class="stats-grid">
@@ -94,7 +103,7 @@ include 'includes/header.php'; // <-- LOKASI BARU
                 <th>Nama Toko</th>
                 <th>Alamat Toko</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                <th>Profil & Lokasi</th> <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -110,9 +119,12 @@ include 'includes/header.php'; // <-- LOKASI BARU
                         <?php } ?>
                     </td>
                     <td>
+                        <a href="pages/detail_kotak_amal.php?id=<?php echo htmlspecialchars($row['ID_KotakAmal']); ?>" class="btn btn-primary btn-action-icon" title="Lihat Profil & Lokasi"><i class="fas fa-map-marked-alt"></i></a>
+                    </td>
+                    <td>
                         <?php if ($row['is_collected_today']) { ?>
                         <?php } else { ?>
-                            <a href="pages/dana-kotak-amal.php?id_kotak_amal=<?php echo htmlspecialchars($row['ID_KotakAmal']); ?>" class="btn btn-primary">Ambil</a>
+                            <a href="pages/dana-kotak-amal.php?id_kotak_amal=<?php echo htmlspecialchars($row['ID_KotakAmal']); ?>" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.9em; background-color: #10B981;">Ambil</a>
                         <?php } ?>
                     </td>
                 </tr>

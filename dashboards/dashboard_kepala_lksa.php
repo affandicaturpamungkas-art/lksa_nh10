@@ -29,7 +29,7 @@ $sidebar_stats = '
     <h4>Total Donatur Terdaftar</h4>
     <p>' . number_format($sidebar_total_donatur_lksa) . '</p>
 </div>
-<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #7C3AED;">
+<div class="sidebar-stats-card card-sumbangan" style="border-left-color: #6366F1;">
     <h4>Total Sumbangan ZIS LKSA</h4>
     <p>Rp ' . number_format($total_sumbangan_lksa) . '</p>
 </div>
@@ -42,24 +42,36 @@ $sidebar_stats = '
 include 'includes/header.php'; // <-- LOKASI BARU
 ?>
 <p>Anda dapat mengelola data di LKSA Anda, termasuk pengguna dan donatur.</p>
-<h2>Ringkasan Statistik LKSA</h2>
-<div class="stats-grid">
+
+<h2 class="dashboard-title">Ringkasan Finansial LKSA</h2>
+<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
     <div class="stats-card card-sumbangan">
         <i class="fas fa-sack-dollar"></i>
-        <h3>Total Sumbangan</h3>
-        <span class="value">Rp <?php echo number_format($total_sumbangan_lksa); ?></span>
+        <div class="stats-card-content">
+            <h3>Total Sumbangan ZIS</h3>
+            <span class="value">Rp <?php echo number_format($total_sumbangan_lksa); ?></span>
+        </div>
     </div>
-    <div class="stats-card card-user">
-        <i class="fas fa-users"></i>
-        <h3>Total Pengguna</h3>
-        <span class="value"><?php echo $total_user_lksa; ?></span>
-    </div>
-    <div class="stats-card card-donatur">
-        <i class="fas fa-hand-holding-heart"></i>
-        <h3>Jumlah Donatur</h3>
-        <span class="value"><?php echo $total_donatur_lksa; ?></span>
+    <div class="stats-card card-kotak-amal">
+        <i class="fas fa-box-open"></i>
+        <div class="stats-card-content">
+            <h3>Total Dana Kotak Amal</h3>
+            <span class="value">Rp <?php echo number_format($total_dana_kotak_amal_lksa); ?></span>
+        </div>
     </div>
 </div>
+
+<h2 class="dashboard-title">Ringkasan Operasional LKSA</h2>
+<div class="stats-grid" style="grid-template-columns: 1fr;">
+    <div class="stats-card card-donatur">
+        <i class="fas fa-hand-holding-heart"></i>
+        <div class="stats-card-content">
+            <h3>Jumlah Donatur Terdaftar</h3>
+            <span class="value"><?php echo number_format($total_donatur_lksa); ?></span>
+        </div>
+    </div>
+</div>
+
 <?php
 include 'includes/footer.php';
 $conn->close();

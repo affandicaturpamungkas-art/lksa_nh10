@@ -17,6 +17,21 @@ if ($_SESSION['jabatan'] != 'Pimpinan') {
 }
 $result = $conn->query($sql);
 ?>
+<style>
+    /* Tambahan style sederhana untuk tombol ikon */
+    .btn-action-icon {
+        padding: 5px 10px;
+        margin: 0 2px;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+    .btn-detail {
+        background-color: #06B6D4; /* Sesuai dengan primary/lksa color */
+    }
+    .btn-edit {
+        background-color: #6B7280; /* Gray/Cancel color */
+    }
+</style>
 <h1 class="dashboard-title">Manajemen Sumbangan</h1>
 <p>Lihat dan kelola semua transaksi sumbangan ZIS.</p>
 <a href="tambah_sumbangan.php" class="btn btn-success">Input Sumbangan Baru</a>
@@ -39,7 +54,9 @@ $result = $conn->query($sql);
                 <td>Rp <?php echo number_format($row['Zakat_Profesi'] + $row['Zakat_Maal'] + $row['Infaq'] + $row['Sedekah'] + $row['Fidyah']); ?></td>
                 <td><?php echo $row['Tgl']; ?></td>
                 <td>
-                    <a href="detail_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-primary">Detail</a>
+                    <a href="detail_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-primary btn-action-icon btn-detail" title="Detail"><i class="fas fa-eye"></i></a>
+                    <a href="edit_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-primary btn-action-icon btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="hapus_sumbangan.php?id=<?php echo $row['ID_Kwitansi_ZIS']; ?>" class="btn btn-danger btn-action-icon" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus sumbangan ini?');"><i class="fas fa-trash"></i></a>
                 </td>
             </tr>
         <?php } ?>
