@@ -8,14 +8,17 @@ if ($current_dir == 'lksa_nh') {
 }
 
 $dashboard_active = ($current_page == 'index.php' || strpos($current_page, 'dashboard_') !== false) ? 'active' : '';
-$lksa_active = ($current_page == 'lksa.php' || $current_page == 'tambah_lksa.php' || $current_page == 'tambah_pimpinan.php') ? 'active' : '';
+$lksa_active = ($current_page == 'lksa.php' || $current_page == 'tambah_lksa.php' || $current_page == 'tambah_pimpinan.php' || $current_page == 'edit_lksa.php') ? 'active' : '';
 $users_active = ($current_page == 'users.php' || $current_page == 'tambah_pengguna.php' || $current_page == 'edit_pengguna.php') ? 'active' : '';
 $donatur_active = ($current_page == 'donatur.php' || $current_page == 'tambah_donatur.php' || $current_page == 'edit_donatur.php') ? 'active' : '';
 $sumbangan_active = ($current_page == 'sumbangan.php' || $current_page == 'tambah_sumbangan.php' || $current_page == 'detail_sumbangan.php') ? 'active' : '';
 $verifikasi_active = ($current_page == 'verifikasi-donasi.php' || $current_page == 'edit_sumbangan.php' || $current_page == 'wa-blast-form.php') ? 'active' : '';
 $kotak_amal_active = ($current_page == 'kotak-amal.php' || $current_page == 'tambah_kotak_amal.php' || $current_page == 'edit_kotak_amal.php') ? 'active' : '';
-$dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php') ? 'active' : '';
-$laporan_active = ($current_page == 'laporan.php' || $current_page == 'tambah_laporan.php') ? 'active' : ''; // Tambahkan Laporan
+$dana_kotak_amal_active = ($current_page == 'dana-kotak-amal.php' || $current_page == 'edit_dana_kotak_amal.php') ? 'active' : '';
+$laporan_active = ($current_page == 'laporan.php' || $current_page == 'tambah_laporan.php' || $current_page == 'detail_laporan.php') ? 'active' : ''; // Tambahkan Laporan
+
+// NEW: Tambahkan variabel active untuk halaman menu export
+$export_menu_active = ($current_page == 'export_data_menu.php') ? 'active' : '';
 
 // --- SIDEBAR LOGIC ---
 $show_sidebar = false;
@@ -35,12 +38,12 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         $is_internal_user = true;
         $foto_path = $foto_user ? $base_url . 'assets/img/' . $foto_user : $base_url . 'assets/img/yayasan.png';
 
-        // $sidebar_stats di-set di setiap file dashboard/manajemen
+        // $sidebar_stats di-set di setiap file dashboard/manajemen. Dihapus dari tampilan.
         $sidebar_stats = $sidebar_stats ?? '';
 
         // Tampilkan sidebar di semua halaman utama (dashboard dan menu manajemen)
         // PERBAIKAN: Sertakan 'index.php' secara eksplisit
-        if ($current_page == 'index.php' || $current_dir == 'dashboards' || in_array($current_page, ['lksa.php', 'users.php', 'donatur.php', 'sumbangan.php', 'kotak-amal.php', 'verifikasi-donasi.php', 'dana-kotak-amal.php', 'tambah_pimpinan.php', 'tambah_pengguna.php', 'tambah_donatur.php', 'tambah_kotak_amal.php', 'tambah_sumbangan.php', 'laporan.php', 'tambah_laporan.php'])) {
+        if ($current_page == 'index.php' || $current_dir == 'dashboards' || in_array($current_page, ['lksa.php', 'users.php', 'donatur.php', 'sumbangan.php', 'kotak-amal.php', 'verifikasi-donasi.php', 'dana-kotak-amal.php', 'tambah_pimpinan.php', 'tambah_pengguna.php', 'tambah_donatur.php', 'tambah_kotak_amal.php', 'tambah_sumbangan.php', 'laporan.php', 'tambah_laporan.php', 'edit_pengguna.php', 'edit_donatur.php', 'edit_sumbangan.php', 'edit_kotak_amal.php', 'edit_lksa.php', 'edit_dana_kotak_amal.php', 'detail_sumbangan.php', 'detail_laporan.php', 'export_data_menu.php'])) {
             // Tambahkan pengecualian agar halaman dashboard_donatur.php dll tidak memakai layout ini
             if ($current_page != 'dashboard_donatur.php' && $current_page != 'dashboard_pemilik_kotak_amal.php') {
                 $show_sidebar = true;
@@ -55,27 +58,91 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
                 <img src="<?php echo htmlspecialchars($foto_path); ?>" alt="Foto Profil" class="profile-img">
 
                 <p class="welcome-text-sidebar">Selamat Datang,<br>
-                    <strong><?php echo htmlspecialchars($nama_user); ?> (<?php echo htmlspecialchars($jabatan); ?>)</strong>
+                    <strong><?php echo htmlspecialchars($nama_user); ?></strong> (<?php echo htmlspecialchars($jabatan); ?>)
                 </p>
 
-                <a href="<?php echo $base_url; ?>pages/edit_pengguna.php?id=<?php echo htmlspecialchars($id_user); ?>"
-                    class="btn btn-primary"><i class="fas fa-edit"></i> Edit Profil</a>
-                <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i>
-                    Logout</a>
+                <div class="sidebar-util-btns">
+                    <a href="<?php echo $base_url; ?>pages/edit_pengguna.php?id=<?php echo htmlspecialchars($id_user); ?>"
+                        class="btn btn-primary sidebar-small-btn" title="Edit Profil"><i class="fas fa-edit"></i></a>
+                    <a href="<?php echo $base_url; ?>login/logout.php" class="btn btn-danger sidebar-small-btn" title="Logout"><i class="fas fa-sign-out-alt"></i>
+                        </a>
+                </div>
 
                 <?php if ($jabatan != 'Pimpinan') { // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
                 <a href="<?php echo $base_url; ?>pages/tambah_laporan.php" class="btn btn-warning"
-                    style="margin-top: 20px; background-color: #F97316; color: white;">
+                    style="margin-top: 15px; margin-bottom: 15px; background-color: #F97316; color: white; width: 100%; box-sizing: border-box;">
                     <i class="fas fa-bullhorn"></i> Lapor ke Atasan
                 </a>
                 <?php } // <-- PERUBAHAN DITAMBAHKAN DI SINI ?>
 
                 <hr>
+                
+                <h2>Menu Navigasi</h2>
+                
+                <div class="sidebar-nav-group">
+                    <a href="<?php echo $base_url; ?>index.php" class="sidebar-nav-item <?php echo $dashboard_active; ?>">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    
+                    <?php if ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] == 'Pimpinan_Pusat') { ?>
+                        <a href="<?php echo $base_url; ?>pages/lksa.php" class="sidebar-nav-item <?php echo $lksa_active; ?>">
+                            <i class="fas fa-building"></i> Manajemen LKSA
+                        </a>
+                    <?php } ?>
+                    
+                    <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
+                        <a href="<?php echo $base_url; ?>pages/users.php" class="sidebar-nav-item <?php echo $users_active; ?>">
+                            <i class="fas fa-users"></i> Manajemen Pengguna
+                        </a>
+                    <?php } ?>
+                </div>
 
-                <?php if (!empty($sidebar_stats)) { ?>
-                    <h2>Ringkasan <?php echo htmlspecialchars($jabatan); ?></h2>
-                    <?php echo $sidebar_stats; ?>
+                <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA' || $_SESSION['jabatan'] == 'Pegawai') { ?>
+                    <hr class="nav-divider">
+                    <h3>ZIS & Donatur</h3>
+                    <div class="sidebar-nav-group">
+                        <a href="<?php echo $base_url; ?>pages/donatur.php" class="sidebar-nav-item <?php echo $donatur_active; ?>">
+                            <i class="fas fa-hand-holding-heart"></i> Manajemen Donatur ZIS
+                        </a>
+                        <a href="<?php echo $base_url; ?>pages/sumbangan.php" class="sidebar-nav-item <?php echo $sumbangan_active; ?>">
+                            <i class="fas fa-funnel-dollar"></i> Manajemen Sumbangan
+                        </a>
+                        <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
+                            <a href="<?php echo $base_url; ?>pages/verifikasi-donasi.php" class="sidebar-nav-item <?php echo $verifikasi_active; ?>">
+                                <i class="fas fa-check-double"></i> Verifikasi Donasi
+                            </a>
+                        <?php } ?>
+                    </div>
                 <?php } ?>
+                
+                <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA' || $_SESSION['jabatan'] == 'Petugas Kotak Amal') { ?>
+                    <hr class="nav-divider">
+                    <h3>Kotak Amal</h3>
+                    <div class="sidebar-nav-group">
+                        <a href="<?php echo $base_url; ?>pages/kotak-amal.php" class="sidebar-nav-item <?php echo $kotak_amal_active; ?>">
+                            <i class="fas fa-box"></i> Manajemen Kotak Amal
+                        </a>
+                        <a href="<?php echo $base_url; ?>pages/dana-kotak-amal.php" class="sidebar-nav-item <?php echo $dana_kotak_amal_active; ?>">
+                            <i class="fas fa-coins"></i> Pengambilan Kotak Amal
+                        </a>
+                    </div>
+                <?php } ?>
+                
+                <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
+                    <hr class="nav-divider">
+                    <h3>Lainnya</h3>
+                    <div class="sidebar-nav-group">
+                        <a href="<?php echo $base_url; ?>pages/laporan.php" class="sidebar-nav-item <?php echo $laporan_active; ?>">
+                            <i class="fas fa-inbox"></i> Laporan Pengguna
+                        </a>
+                        
+                        <a href="<?php echo $base_url; ?>pages/export_data_menu.php" class="sidebar-nav-item <?php echo $export_menu_active; ?>">
+                            <i class="fas fa-file-export"></i> Export Data
+                        </a>
+                        </div>
+                <?php } ?>
+
+                <hr>
 
             </div>
             <?php
@@ -128,24 +195,59 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             padding: 20px;
         }
 
+        /* Revised Header Styles */
         .header {
-            padding: 15px 25px; /* Dikecilkan */
+            padding: 20px 30px; /* Ditingkatkan untuk memberi ruang lebih */
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--form-bg);
             border-radius: 15px;
-            margin-bottom: 15px; /* Dikecilkan */
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Shadow lebih kuat */
+        }
+        
+        .header-logo-section {
+            text-align: left;
+            line-height: 1.2;
+            padding-top: 5px;
+            border-left: 5px solid var(--secondary-color); /* Tambah aksen border di kiri */
+            padding-left: 15px;
         }
 
-        .header h1 {
+        .header-slogan-top {
+            font-size: 0.85em; /* Sedikit diperbesar */
+            color: #4B5563; /* Gray gelap */
+            display: block; 
             margin: 0;
-            font-size: 1.4em; /* Dikecilkan */
-            color: var(--primary-color);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
+            font-weight: 600;
         }
+
+        .header-title-main {
+            margin: 5px 0 0 0; /* Jarak antara slogan atas dan logo */
+            font-size: 2.2em;
+            font-weight: 900;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+        }
+
+        .header-logo-img {
+            height: 45px; /* Sedikit dikecilkan agar seimbang dengan padding header */
+            width: auto;
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+        
+        .header-slogan-bottom {
+            font-size: 0.75em; /* Sedikit diperbesar */
+            color: #6B7280; 
+            display: block; 
+            margin: 0;
+            font-style: italic;
+        }
+        /* End Revised Header Styles */
+
 
         .content {
             padding: 30px 40px; /* Dikecilkan untuk simetri */
@@ -221,47 +323,15 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             margin-bottom: 20px; /* Dikecilkan */
         }
 
+        /* Menghilangkan CSS untuk top-nav yang sudah tidak ada */
         .top-nav {
-            display: flex;
-            /* **PERUBAHAN KRITIS: Mengganti nowrap ke wrap dan menghilangkan overflow-x** */
-            flex-wrap: wrap; /* Izinkan item turun ke baris baru */
-            overflow-x: hidden; /* Pastikan tidak ada scrollbar horizontal */
-            justify-content: center; /* Rata tengah agar terlihat rapi saat wrap */
-            /* Rata kiri untuk scrollable menu */
-            gap: 8px; /* Dikecilkan */
-            background-color: var(--primary-color);
-            padding: 8px 15px; /* Dikecilkan */
-            border-radius: 10px; /* Dikecilkan */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Dikecilkan */
-            margin-bottom: 15px; /* Dikecilkan */
-
-            /* SCROLLBAR SEKARANG DITAMPILKAN SEBAGAI PENANDA */
+            display: none; 
         }
-
-        /* Hapus semua aturan penyembunyi scrollbar: -ms-overflow-style, scrollbar-width, dan .top-nav::-webkit-scrollbar */
 
         .nav-item {
-            flex-shrink: 0;
-            /* Mencegah item menciut */
-            text-decoration: none;
-            color: var(--text-light);
-            padding: 10px 15px; /* Dikecilkan */
-            font-weight: 600;
-            border-radius: 8px; /* Dikecilkan */
-            transition: background-color 0.3s, transform 0.2s;
-            font-size: 0.9em; /* Dikecilkan */
+            display: none;
         }
-
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.15); /* Slightly brighter hover */
-            transform: translateY(-1px); /* Dikecilkan */
-        }
-
-        .nav-item.active {
-            background-color: var(--secondary-color); /* Aqua/Cyan */
-            color: var(--primary-color);
-            font-weight: 700;
-        }
+        /* Akhir Penghilangan CSS */
 
         table {
             width: 100%;
@@ -483,21 +553,112 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
         }
 
         .profile-img {
-            width: 100px; /* Dikecilkan */
-            height: 100px; /* Dikecilkan */
+            width: 80px; /* Dikecilkan dari 100px */
+            height: 80px; /* Dikecilkan dari 100px */
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--secondary-color); /* Dikecilkan */
-            margin-bottom: 10px; /* Dikecilkan */
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #E5E7EB; /* Border tipis dan lebih lembut */
+            margin-bottom: 5px; 
+            box-shadow: none; /* Dihapus */
         }
 
         .welcome-text-sidebar {
-            font-size: 1.0em; /* Dikecilkan */
+            font-size: 0.9em; /* Dikecilkan dari 1.0em */
+            font-weight: 500;
+            margin: 5px auto 10px auto; /* Disesuaikan */
+            color: #6B7280; /* Warna abu-abu yang lebih lembut */
+            line-height: 1.4;
+        }
+        /* Style untuk nama pengguna (yang ada di dalam strong tag) */
+        .welcome-text-sidebar strong {
+            font-weight: 700; 
+            color: var(--primary-color);
+            display: block; /* Memastikan nama di baris baru */
+            font-size: 1.1em;
+            margin-top: -3px;
+        }
+
+        /* NEW UTILITY BUTTON STYLES for Sidebar */
+        .sidebar-util-btns {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; 
+            margin-bottom: 15px; 
+        }
+
+        .sidebar-small-btn {
+            /* Icon-only button styles */
+            padding: 10px; 
+            width: 45%; 
+            text-align: center;
+            font-size: 1.1em; 
+            border-radius: 8px; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            line-height: 1; 
+            min-width: 40px; 
+            max-width: 100px;
+        }
+
+        .sidebar-small-btn i {
+            margin-right: 0 !important; 
+        }
+        /* END NEW UTILITY BUTTON STYLES */
+
+        /* NEW NAVIGATION MENU STYLES */
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            text-align: left;
+            text-decoration: none;
+            color: var(--primary-color); 
+            border-radius: 6px;
+            margin-top: 5px;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.95em;
             font-weight: 600;
-            margin: 5px auto 15px auto; /* FIX: Tambahkan auto untuk centering */
+            line-height: 1.2;
+        }
+        .sidebar-nav-item:first-of-type {
+             margin-top: 10px; /* Jarak dari header/hr Menu Navigasi */
+        }
+        .sidebar-nav-item i {
+            margin-right: 10px;
+            font-size: 1.1em;
+            color: #9CA3AF; /* Light gray icon color */
+            transition: color 0.2s;
+            /* FIX: Ensure Font Awesome font loads for the icon element */
+            font-family: 'Font Awesome 6 Free'; /* Primary Font Awesome 6 font */
+            font-weight: 900; /* Ensure solid icons (fas) use the correct weight */
+        }
+        .sidebar-nav-item:hover {
+            background-color: #E5E7EB; /* Lighter background on hover */
             color: var(--primary-color);
         }
+        .sidebar-nav-item.active {
+            background-color: var(--secondary-color); /* Active background color */
+            color: var(--primary-color); /* Active text color */
+            font-weight: 700;
+        }
+        .sidebar-nav-item.active i {
+            color: var(--primary-color); /* Active icon color matches text */
+        }
+        /* Penyesuaian untuk grouping */
+        .sidebar-nav-group {
+            margin-bottom: 10px;
+        }
+        .nav-divider {
+            margin: 15px 0 10px 0;
+            border: 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* END NEW NAVIGATION MENU STYLES */
 
         .sidebar-wrapper .btn {
             width: 100%;
@@ -506,6 +667,25 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             font-size: 0.9em; /* Dikecilkan */
             box-sizing: border-box; /* FIX: Pastikan padding termasuk dalam lebar */
         }
+        
+        .sidebar-wrapper h2, .sidebar-wrapper h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 15px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            text-align: left;
+        }
+        .sidebar-wrapper h3 {
+            font-size: 0.95em;
+            font-weight: 600;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 10px;
+            color: #6B7280;
+        }
 
         .sidebar-wrapper hr {
             margin: 15px 0; /* Dikecilkan */
@@ -513,6 +693,32 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
             border-top: 1px solid var(--border-color);
         }
         
+        /* FOOTER STYLES (MODERN) */
+        .footer-main {
+            background-color: #F0F4F8; /* Warna abu-abu muda yang lembut */
+            padding: 15px 0; /* Padding vertikal sedikit dikurangi */
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 4px solid var(--secondary-color); /* Aksen warna Cyan yang kuat */
+            margin-top: 30px; /* Jarak lebih besar dari konten utama */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03); /* Sedikit bayangan di atas */
+        }
+
+        .footer-content {
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-main p {
+            margin: 3px 0;
+            font-size: 0.8em; /* Ukuran font lebih kecil */
+            color: #4B5563; /* Warna gelap yang nyaman */
+            font-weight: 500;
+        }
+        /* END FOOTER STYLES */
+
         /* === MEDIA QUERIES UNTUK RESPONSIVENESS === */
         
         /* Perubahan utama untuk tablet (768px - 1024px) */
@@ -564,6 +770,19 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
                 margin-right: 0;
             }
 
+            /* Tombol utilitas dibuat 50% dari lebar container, tetap berjejer */
+            .sidebar-util-btns {
+                margin-left: 0;
+                margin-right: 0;
+                justify-content: center;
+            }
+            
+            /* Tombol Lapor diatur kembali agar mengambil lebar penuh di mobile */
+            .sidebar-wrapper a.btn-warning {
+                 margin-left: 0 !important;
+                 margin-right: 0 !important;
+            }
+
             /* Tata letak statistik di sidebar diubah menjadi vertikal penuh */
             .sidebar-stats-card {
                 display: block; 
@@ -571,12 +790,25 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
                 margin-top: 8px; /* Dikecilkan */
             }
             
-            .sidebar-wrapper h2 {
+            .sidebar-wrapper h2, .sidebar-wrapper h3 {
                 margin-top: 8px; /* Dikecilkan */
                 border-bottom: none;
                 padding-bottom: 0;
+                text-align: center;
+            }
+
+            .sidebar-nav-item {
+                justify-content: center;
+                padding: 10px 0;
+            }
+            .sidebar-nav-item i {
+                margin-right: 8px;
             }
             
+            .footer-main {
+                margin-top: 15px;
+            }
+
             .top-nav {
                 padding: 8px; /* Padding menu navigasi lebih kecil */
             }
@@ -588,49 +820,16 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['id_user'])) {
 <body>
     <div class="container">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 10px;"> 
-                <div style="text-align: left; line-height: 1.2; padding-top: 5px;">
-                    <span style="font-size: 0.8em; color: var(--text-dark); display: block; margin: 0;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
-                    <h1 style="margin: 0; font-size: 2.0em; font-weight: 900; font-family: 'Montserrat', sans-serif;">
-                         <img src="<?php echo $base_url; ?>assets/img/give_track_logo_final.png" alt="Give Track Logo System"
-                            style="height: 50px; width: auto; margin: 0; padding: 0; vertical-align: middle;">
-                    </h1> 
-                    <span style="font-size: 0.7em; color: #555; display: block; margin: 0;">mendonasikan, mengapresiasi, dan menjaga keberlanjutan kebaikan</span>
-                </div>
+            <div class="header-logo-section">
+                <span class="header-slogan-top">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
+                
+                <h1 class="header-title-main">
+                     <img src="<?php echo $base_url; ?>assets/img/give_track_logo_final.png" alt="Give Track Logo System" class="header-logo-img">
+                </h1> 
+                
+                <span class="header-slogan-bottom">mendonasikan, mengapresiasi, dan menjaga keberlanjutan kebaikan</span>
             </div>
         </div>
-        <div class="top-nav">
-            <a href="<?php echo $base_url; ?>index.php" class="nav-item <?php echo $dashboard_active; ?>">Dashboard</a>
-            <?php if ($_SESSION['jabatan'] == 'Pimpinan' && $_SESSION['id_lksa'] == 'Pimpinan_Pusat') { ?>
-                <a href="<?php echo $base_url; ?>pages/lksa.php" class="nav-item <?php echo $lksa_active; ?>">Manajemen
-                    LKSA</a>
-            <?php } ?>
-            <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
-                <a href="<?php echo $base_url; ?>pages/users.php" class="nav-item <?php echo $users_active; ?>">Manajemen
-                    Pengguna</a>
-            <?php } ?>
-            <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA' || $_SESSION['jabatan'] == 'Pegawai') { ?>
-                <a href="<?php echo $base_url; ?>pages/donatur.php"
-                    class="nav-item <?php echo $donatur_active; ?>">Manajemen Donatur ZIS</a>
-                <a href="<?php echo $base_url; ?>pages/sumbangan.php"
-                    class="nav-item <?php echo $sumbangan_active; ?>">Manajemen Sumbangan</a>
-                <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
-                    <a href="<?php echo $base_url; ?>pages/verifikasi-donasi.php"
-                        class="nav-item <?php echo $verifikasi_active; ?>">Verifikasi Donasi</a>
-                <?php } ?>
-            <?php } ?>
-            <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA' || $_SESSION['jabatan'] == 'Petugas Kotak Amal') { ?>
-                <a href="<?php echo $base_url; ?>pages/kotak-amal.php"
-                    class="nav-item <?php echo $kotak_amal_active; ?>">Manajemen Kotak Amal</a>
-                <a href="<?php echo $base_url; ?>pages/dana-kotak-amal.php"
-                    class="nav-item <?php echo $dana_kotak_amal_active; ?>">Pengambilan Kotak Amal</a>
-            <?php } ?>
-            <?php if ($_SESSION['jabatan'] == 'Pimpinan' || $_SESSION['jabatan'] == 'Kepala LKSA') { ?>
-                <a href="<?php echo $base_url; ?>pages/laporan.php" class="nav-item <?php echo $laporan_active; ?>">Laporan
-                    Pengguna</a>
-            <?php } ?>
-        </div>
-
         <?php if ($show_sidebar) { ?>
             <div class="content">
                 <?php echo $sidebar_html; ?>

@@ -230,12 +230,42 @@ $conn->close();
             font-weight: 600;
         }
         
+        /* NEW FOOTER STYLES */
+        .footer-main {
+            background-color: #F9FAFB; 
+            padding: 25px 0;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid #D1D5DB; 
+            margin-top: 30px; 
+            box-shadow: none;
+        }
+
+        .footer-content {
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-main p {
+            margin: 4px 0;
+            font-size: 0.85em;
+            color: #6B7280; 
+            font-weight: 500;
+        }
+        
+        .footer-main p strong {
+            font-weight: 700;
+            color: var(--text-dark); 
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;"> 
                 <div style="text-align: left; line-height: 1.2; padding-top: 5px;">
                     <span style="font-size: 0.8em; color: #1F2937; display: block; margin: 0;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal</span>
                     <h1 style="margin: 0; font-size: 2.0em; font-weight: 900; font-family: 'Montserrat', sans-serif;">
@@ -315,5 +345,11 @@ $conn->close();
             </div>
             </div>
     </div>
+    <footer class="footer-main">
+        <div class="footer-content">
+            <p style="font-weight: 700; color: var(--text-dark); font-size: 0.95em;">&copy; <?php echo date('Y'); ?> Give Track</p>
+            <p style="font-size: 0.85em;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal. Dikelola oleh **LKSA Nur Hidayah**.</p>
+        </div>
+    </footer>
 </body>
 </html>

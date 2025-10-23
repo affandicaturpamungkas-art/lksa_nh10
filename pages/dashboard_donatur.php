@@ -238,6 +238,36 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             font-weight: 600;
         }
         
+        /* NEW FOOTER STYLES */
+        .footer-main {
+            background-color: #F9FAFB; 
+            padding: 25px 0;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid #D1D5DB; 
+            margin-top: 30px; 
+            box-shadow: none;
+        }
+
+        .footer-content {
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-main p {
+            margin: 4px 0;
+            font-size: 0.85em;
+            color: #6B7280; 
+            font-weight: 500;
+        }
+        
+        .footer-main p strong {
+            font-weight: 700;
+            color: var(--text-dark); 
+        }
+
     </style>
 </head>
 <body>
@@ -325,5 +355,11 @@ $foto_path = $foto_donatur ? $base_url . 'assets/img/' . $foto_donatur : $base_u
             </div>
         </div>
     </div>
+    <footer class="footer-main">
+        <div class="footer-content">
+            <p style="font-weight: 700; color: var(--text-dark); font-size: 0.95em;">&copy; <?php echo date('Y'); ?> Give Track</p>
+            <p style="font-size: 0.85em;">Sistem Informasi Pengelolaan ZISWAF & Kotak Amal. Dikelola oleh **LKSA Nur Hidayah**.</p>
+        </div>
+    </footer>
 </body>
 </html>
